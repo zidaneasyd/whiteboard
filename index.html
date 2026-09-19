@@ -31,6 +31,8 @@
       background: var(--paper);
       font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
     }
+    body { user-select: none; -webkit-user-select: none; }
+    input, textarea, select, [contenteditable="true"], [contenteditable="plaintext-only"] { user-select: text; -webkit-user-select: text; }
 
     button { font: inherit; }
 
@@ -181,13 +183,13 @@
     }
     .card.selected.multi-selected { box-shadow: 0 2px 5px rgba(30, 69, 145, .08); }
     .card.selected.multi-selected.active-selection { box-shadow: 0 0 0 3px var(--card-glow-soft, rgba(57,120,246,.18)), 0 0 12px var(--card-glow, rgba(57,120,246,.30)); }
-    .card.selected.multi-selected.group-active { box-shadow: 0 0 0 1px var(--card-glow, rgba(57,120,246,.58)), 0 1px 4px rgba(30,69,145,.12); }
+    .card.selected.multi-selected.group-active { box-shadow: 0 0 0 3px var(--card-glow-soft, rgba(57,120,246,.18)), 0 0 12px var(--card-glow, rgba(57,120,246,.30)); }
     .connection-label { fill: #fff; stroke: #3978f6; stroke-width: 1; }
     .connection-label-text { fill: #245dc9; font: 700 10px/1 Inter, sans-serif; pointer-events: none; }
     .connection-label-hit { fill: transparent; cursor: pointer; pointer-events: all; }
     .relation-editor { position: fixed; z-index: 80; width: 180px; height: 34px; padding: 0 10px; border: 1px solid #3978f6; border-radius: 5px; outline: 0; color: #245dc9; background: #fff; box-shadow: 0 8px 24px rgba(36,72,140,.18); font: 700 11px/1 inherit; transform: translate(-50%,-50%); }
     .card.connect-source { box-shadow: 0 0 0 3px rgba(255, 194, 73, .34), 0 0 14px rgba(255, 194, 73, .38); }
-    .card.drag-ghost { z-index: 0; opacity: .17; box-shadow: none; pointer-events: none; filter: saturate(.65); }
+    .card.drag-ghost { z-index: -1; opacity: .17; box-shadow: none; pointer-events: none; filter: saturate(.65); }
     .card.dragging { cursor: grabbing; transition: none; }
     .card.editing { cursor: text; user-select: text; }
 
@@ -335,7 +337,7 @@
     .text-format-bar button:hover { color: #245dc9; background: #eef3ff; }
     .text-format-divider { width: 1px; height: 18px; margin: 0 2px; background: rgba(36,42,38,.1); }
     .motion-enabled .card { transition: box-shadow .15s ease, transform .15s cubic-bezier(.2,.8,.2,1); }
-    .motion-enabled .card.dragging { z-index: 9; transform: scale(1.025) rotate(.25deg); box-shadow: 0 9px 22px rgba(27,54,110,.17); }
+    .motion-enabled .card.dragging { z-index: 9; transform: scale(var(--card-scale,1)) rotate(.25deg); box-shadow: 0 9px 22px rgba(27,54,110,.17); }
 
     .selection-box {
       position: fixed;
@@ -550,6 +552,11 @@
     .header-brand { display: flex; align-items: center; gap: 8px; margin-right: 4px; white-space: nowrap; font-size: 11px; font-weight: 750; }
     .header-brand .brand-mark { width: 25px; height: 25px; font-size: 10px; }
     .editor-menus { display: flex; align-self: stretch; gap: 1px; }
+    .quick-actions { display:flex;align-items:center;gap:5px;margin-left:4px; }
+    .quick-group { display:flex;align-items:center;gap:1px;padding:2px;border:1px solid rgba(36,42,38,.08);border-radius:7px;background:rgba(255,255,255,.34); }
+    .quick-action { display:grid;width:27px;height:27px;place-items:center;padding:0;border:0;border-radius:5px;color:#697180;background:transparent;cursor:pointer; }
+    .quick-action:hover { color:#245dc9;background:rgba(234,241,255,.92); }
+    .quick-action svg { width:14px;height:14px;stroke-width:1.8; }
     .app-menu { position: relative; display: flex; align-items: center; }
     .menu-trigger { height: 30px; padding: 0 10px; border: 0; border-radius: 5px; color: #515866; background: transparent; font: 650 10px/1 inherit; cursor: pointer; }
     .menu-trigger svg { width: 16px; height: 16px; stroke-width: 1.8; }
@@ -615,6 +622,7 @@
       .header-brand .brand-mark { width: 28px; height: 28px; }
       .editor-menus { min-width: 0; overflow-x: auto; scrollbar-width: none; }
       .editor-menus::-webkit-scrollbar { display: none; }
+      .quick-actions { display:none; }
       .menu-trigger { height: 38px; padding: 0 9px; font-size: 11px; }
       .menu-popover { position: fixed; top: 50px; left: 8px; right: 8px; max-height: 70vh; overflow-y: auto; }
       .menu-command { min-height: 42px; font-size: 12px; }
@@ -659,14 +667,25 @@
     .board-page .modal-head h2 { font-family:inherit;font-size:30px;font-weight:700; }
     .card.text-card .card-text * { font-size:inherit;line-height:inherit;max-width:100%;min-width:0; }
     .card.text-card .card-text p { margin:.5em 0; }
-    .media-stage { position:absolute;left:0;top:0;transform-origin:0 0;overflow:hidden;border-radius:5px;background:#f1f5f9;color:#334155; }
-    .media-stage video { width:100%;height:calc(100% - 66px);display:block;background:#0f172a;object-fit:contain; }
-    .media-stage audio { width:100%;height:44px; }
-    .media-controls { height:66px;padding:9px 12px;display:grid;grid-template-columns:34px 1fr;gap:6px 10px;align-items:center; }
-    .media-controls button { grid-row:span 2;width:34px;height:34px;border:0;border-radius:50%;background:#3978f6;color:white;cursor:pointer; }
-    .media-controls progress { width:100%;height:5px;pointer-events:none;accent-color:#3978f6; }
-    .media-caption { overflow:hidden;white-space:nowrap;text-overflow:ellipsis;font-size:10px; }
-    @media(max-width:720px) { .board-tabs{top:48px;} .color-history{bottom:158px;left:12px;} .board-page .board-grid{grid-template-columns:repeat(2,minmax(0,1fr));} }
+    .media-stage { position:absolute;left:0;top:0;transform-origin:0 0;overflow:hidden;border-radius:5px;background:#f8fafc;color:#64748b; }
+    .media-stage video { width:100%;height:calc(100% - 40px);display:block;background:transparent;object-fit:cover; }
+    .media-stage audio { width:100%;height:32px; }
+    .media-controls { height:40px;padding:5px 10px;display:flex;justify-content:center;align-items:center;gap:8px; }
+    .media-controls button { width:26px;height:26px;border:0;border-radius:50%;background:#3978f6;color:white;cursor:pointer;font-size:10px; }
+    .media-controls progress { width:min(120px,48%);height:4px;pointer-events:none;accent-color:#3978f6; }
+    .media-caption { max-width:110px;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;font-size:9px;text-align:center; }
+    .audio-stage { background:#eaf1ff center/cover no-repeat; }
+    .audio-stage::after { content:""; position:absolute;inset:0;background:linear-gradient(180deg,transparent 45%,rgba(15,23,42,.72));pointer-events:none; }
+    .audio-stage .media-controls { position:absolute;inset:0;z-index:1;height:auto;display:flex;flex-direction:column;justify-content:center;color:#fff; }
+    .audio-stage .media-controls button { width:42px;height:42px;background:rgba(15,23,42,.66);backdrop-filter:blur(8px);font-size:15px; }
+    .audio-stage .media-caption { position:absolute;left:10px;right:10px;bottom:17px;max-width:none;color:#fff;text-shadow:0 1px 3px rgba(0,0,0,.45); }
+    .audio-stage .media-controls progress { position:absolute;left:10px;right:10px;bottom:8px;width:auto;accent-color:#fff; }
+    .document-card { width:calc(108px * var(--zoom,1));height:calc(92px * var(--zoom,1));padding:calc(12px * var(--zoom,1));display:flex;flex-direction:column;align-items:center;justify-content:center;gap:calc(8px * var(--zoom,1));background:#fff!important;color:#334155!important;border-color:#cbd5e1!important; }
+    .document-card svg { width:calc(28px * var(--zoom,1));height:calc(28px * var(--zoom,1)); }
+    .document-card span { width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;text-align:center;font-size:calc(9px * var(--zoom,1)); }
+    .document-viewer { width:min(760px,92vw); }
+    .document-content { max-height:65vh;overflow:auto;margin:0;padding:16px;border:1px solid #e2e8f0;border-radius:6px;background:#f8fafc;color:#1e293b;white-space:pre-wrap;font:12px/1.6 ui-monospace,SFMono-Regular,Consolas,monospace; }
+    @media(max-width:720px) { .board-tabs{top:48px;} .color-history{display:none;} .board-page .board-grid{grid-template-columns:1fr;} .editor-menus .app-menu:nth-child(n+3){display:none;} .color-bar{bottom:58px;} .mobile-controls{bottom:104px;} .tool-rail{bottom:8px;} .media-card{max-width:72vw;max-height:52vh;} }
   </style>
 </head>
 <body>
@@ -691,12 +710,17 @@
       <div class="app-menu"><button class="menu-trigger" type="button" aria-haspopup="menu">Tampilan</button><div class="menu-popover" role="menu"><button id="fitMenu" class="menu-command" type="button">Tampilkan semua <kbd>Shift+P</kbd></button><button id="snapToggleMenu" class="menu-command" type="button"><span><span class="menu-check">✓</span> Snap presisi</span><kbd>Aktif</kbd></button><button id="shortcutMenu" class="menu-command" type="button">Panduan shortcut</button></div></div>
       <div class="app-menu"><button class="menu-trigger" type="button" aria-haspopup="menu">Susun</button><div class="menu-popover" role="menu"><button id="frontMenu" class="menu-command" type="button">Ke paling atas <kbd>Ctrl+Shift+↑</kbd></button><button id="backMenu" class="menu-command" type="button">Ke paling bawah <kbd>Ctrl+Shift+↓</kbd></button><div class="menu-separator"></div><button id="alignLeftMenu" class="menu-command" type="button">Ratakan kiri <kbd>L</kbd></button><button id="alignTopMenu" class="menu-command" type="button">Ratakan atas <kbd>T</kbd></button></div></div>
     </nav>
+    <nav class="quick-actions" aria-label="Aksi cepat">
+      <div class="quick-group" aria-label="Riwayat"><button id="quickUndo" class="quick-action" type="button" aria-label="Urungkan" title="Urungkan · Ctrl+Z"></button><button id="quickRedo" class="quick-action" type="button" aria-label="Ulangi" title="Ulangi · Ctrl+Shift+Z"></button></div>
+      <div class="quick-group" aria-label="Kartu"><button id="quickDuplicate" class="quick-action" type="button" aria-label="Duplikat" title="Duplikat · Ctrl+D"></button><button id="quickGroup" class="quick-action" type="button" aria-label="Group" title="Group · G"></button><button id="quickUngroup" class="quick-action" type="button" aria-label="Ungroup" title="Ungroup · U"></button><button id="quickDelete" class="quick-action" type="button" aria-label="Hapus" title="Hapus · Delete"></button></div>
+      <div class="quick-group" aria-label="Tampilan"><button id="quickFit" class="quick-action" type="button" aria-label="Tampilkan semua" title="Tampilkan semua · Shift+P"></button></div>
+    </nav>
     <button id="settingsButton" class="header-action" type="button" aria-label="Pengaturan dan shortcut" title="Pengaturan"><svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="1.6"/><path d="M19 13.5v-3l-2.1-.6a7 7 0 0 0-.7-1.7l1.1-1.9-2.1-2.1-1.9 1.1a7 7 0 0 0-1.7-.7L10.5 2h-3l-.6 2.1a7 7 0 0 0-1.7.7L3.3 3.7 1.2 5.8l1.1 1.9a7 7 0 0 0-.7 1.7L0 10.5v3l2.1.6a7 7 0 0 0 .7 1.7l-1.1 1.9 2.1 2.1 1.9-1.1a7 7 0 0 0 1.7.7l.6 2.1h3l.6-2.1a7 7 0 0 0 1.7-.7l1.9 1.1 2.1-2.1-1.1-1.9a7 7 0 0 0 .7-1.7L19 13.5Z" stroke="currentColor" stroke-width="1.2" transform="translate(2.5 .25) scale(.8)"/></svg></button>
     <strong id="activeBoardTitle" class="active-board-title">Board</strong>
     <select id="boardSelect" class="visually-hidden" aria-label="Pilih board"></select>
     <input id="boardName" class="visually-hidden" type="text" maxlength="48" aria-label="Nama board">
-    <input id="importFile" class="visually-hidden" type="file" accept="application/json,.json,image/*,video/mp4,video/webm,audio/mpeg,audio/ogg,audio/wav,image/svg+xml" tabindex="-1">
-    <input id="mediaFile" class="visually-hidden" type="file" accept="image/*,video/mp4,video/webm,audio/mpeg,audio/ogg,audio/wav,image/svg+xml" tabindex="-1">
+    <input id="importFile" class="visually-hidden" type="file" accept="application/json,.json,image/*,video/*,audio/*,.txt,.md,.markdown,.csv,.log,.xml,.html,.css,.js,.ts,.py" tabindex="-1">
+    <input id="mediaFile" class="visually-hidden" type="file" accept="image/*,video/mp4,video/webm,video/ogg,.mov,.m4v,audio/mpeg,audio/ogg,audio/wav,audio/mp4,audio/aac,audio/flac,audio/opus,.m4a,.flac,.opus,.txt,.md,.markdown,.csv,.log,.xml,.html,.css,.js,.ts,.py,image/svg+xml" tabindex="-1">
   </header>
 
   <nav id="boardTabs" class="board-tabs" aria-label="Board terbuka"></nav><div id="colorHistory" class="color-history" aria-label="Riwayat warna"></div>
@@ -712,9 +736,9 @@
     <span>Grup <strong id="groupInfo">—</strong></span>
     <div class="version-wrap">
       <button id="versionButton" class="version-button" type="button" aria-haspopup="dialog" aria-controls="versionModal" aria-expanded="false">
-        <span class="version-label">v0.8.3</span>
+        <span class="version-label">v0.9.0</span>
       </button>
-      <div class="tooltip" role="tooltip"><strong>v0.8.3</strong><ul><li>Ctrl+Space tidak mengganti tool</li><li>Warna transparan tetap terbaca</li><li>Group menandai semua anggotanya</li></ul></div>
+      <div class="tooltip" role="tooltip"><strong>v0.9.0</strong><ul><li>Handle resize berukuran tetap</li><li>Aksi cepat berkelompok</li><li>Duplikasi drag diperketat</li></ul></div>
     </div>
   </footer>
 
@@ -770,6 +794,18 @@
       <button id="closeVersionModal" class="close-button" type="button" aria-label="Tutup riwayat versi">×</button>
     </div>
     <details class="release" open>
+      <summary class="release-meta"><strong>v0.9.0 — stabilisasi interaksi</strong></summary>
+      <div class="change-list"><ul><li>Handle resize media mempertahankan ukuran antarmuka default meskipun kartu diperbesar atau diperkecil.</li><li>Header memperoleh kelompok ikon aksi cepat untuk undo/redo, duplikat, group/ungroup, hapus, dan tampilkan semua; tooltip menampilkan shortcut masing-masing.</li><li>Duplikasi klik-kanan hanya diproses ketika drag masih aktif. Seluruh state dan fungsi duplikasi setelah drag selesai telah dihapus.</li><li>Alur internal diringkas dengan menghapus fungsi legacy serta state paste/drag yang tidak lagi digunakan.</li></ul></div>
+    </details>
+    <details class="release">
+      <summary class="release-meta"><strong>v0.8.6 — video &amp; clipboard</strong></summary>
+      <div class="change-list"><ul><li>Video kini membaca resolusi asli, membentuk kartu sesuai rasio gambar, menghilangkan letterbox hitam, dan tetap memiliki bar progres.</li><li>Resize media memakai satu faktor skala sehingga resolusi/aspect ratio dan bentuk kartu selalu terkunci.</li><li>Thumbnail board menghitung seluruh kartu dan memenuhi area pratinjau, bukan hanya sepuluh kartu pertama.</li><li>Clipboard internal memakai penanda khusus. Paste selalu memakai salinan terakhir dari dalam atau luar aplikasi dan seluruh hasil ditempatkan pada posisi pointer.</li></ul></div>
+    </details>
+    <details class="release">
+      <summary class="release-meta"><strong>v0.8.5 — media &amp; dokumen</strong></summary>
+      <div class="change-list"><ul><li>Seluruh anggota group memakai glow aktif yang sama seperti kartu aktif, mengikuti contoh visual yang diberikan.</li><li>Audio membaca judul dan cover ID3 bila tersedia, tampil kotak dengan tombol play/pause di tengah serta progres di bawah. Pengaturan interaksi media dihapus.</li><li>Dukungan audio: MP3, WAV, OGG, M4A/AAC, FLAC, dan Opus; video: MP4, WebM, OGV, MOV, dan M4V, bergantung codec browser.</li><li>TXT, Markdown, CSV, LOG, XML, HTML, CSS, JavaScript, TypeScript, dan Python tampil sebagai kartu dokumen; klik dua kali membuka viewer.</li><li>Tampilan mobile disederhanakan dengan menu lanjutan dan riwayat warna disembunyikan.</li></ul></div>
+    </details>
+    <details class="release">
       <summary class="release-meta"><strong>v0.8.3 — seleksi &amp; editor</strong></summary>
       <div class="change-list"><ul><li>Ctrl+Space kini mengonfirmasi dan menutup editor tanpa meneruskan shortcut ke kanvas, sehingga tool tidak ikut berpindah.</li><li>Perubahan warna diterapkan langsung ke kartu terpilih. Kartu transparan tetap mempertahankan border tipis agar tidak tampak menghilang.</li><li>Saat group aktif, setiap kartu anggotanya mendapat penanda border halus, bukan hanya satu kartu acuan.</li></ul></div>
     </details>
@@ -907,15 +943,18 @@
     <div class="modal-panel" style="max-width:520px">
       <div class="modal-head"><div><p class="eyebrow">Pengaturan</p><h2 id="settingsTitle">Panduan shortcut</h2></div><button id="closeSettings" class="close-button" type="button" aria-label="Tutup pengaturan">×</button></div>
       <div class="setting-row"><div><strong>Animasi drag</strong><span>Memberi efek angkat halus saat kartu digeser.</span></div><label class="switch"><input id="dragMotionToggle" type="checkbox"><span class="switch-track"></span></label></div>
-      <div class="setting-row"><div><strong>Interaksi media lengkap</strong><span>Aktifkan seek, volume, dan kontrol bawaan. Default hanya play/pause.</span></div><label class="switch"><input id="mediaInteractionToggle" type="checkbox"><span class="switch-track"></span></label></div>
       <dl class="shortcut-list"><dt>Buat / hapus link internal seleksi</dt><dd>Shift + L</dd><dt>Board sebelumnya / berikutnya</dt><dd>Ctrl + Alt + ← / →</dd>
         <dt>Buka daftar board</dt><dd>Ctrl + O</dd><dt>Ambil warna kartu aktif</dt><dd>Ctrl + Shift + E</dd><dt>Konfirmasi editor</dt><dd>Enter / Ctrl + Space</dd><dt>Simpan board</dt><dd>Ctrl + S</dd><dt>Tampilkan seluruh kartu</dt><dd>Shift + P</dd><dt>Ekspor / Impor</dt><dd>Ctrl + E / Ctrl + I</dd><dt>Undo / Redo kartu</dt><dd>Ctrl + Z / Ctrl + Shift + Z</dd><dt>Ulangi aktivitas</dt><dd>Ctrl + R</dd><dt>Ganti kursor / garis</dt><dd>Space</dd><dt>Group / Ungroup</dt><dd>G / U</dd><dt>Pilih semua</dt><dd>Ctrl + A</dd><dt>Tempel kartu / screenshot / teks</dt><dd>Ctrl + V</dd><dt>Duplikat</dt><dd>Ctrl + D</dd><dt>Ratakan ke kartu acuan</dt><dd>T / B / L / R / C / E</dd><dt>Hapus kartu / garis</dt><dd>Delete</dd>
       </dl>
     </div>
   </div>
 
+  <div id="documentModal" class="modal-shell" role="dialog" aria-modal="true" aria-labelledby="documentTitle" aria-hidden="true">
+    <div class="modal-panel document-viewer"><div class="modal-head"><h2 id="documentTitle">Dokumen</h2><button id="closeDocumentModal" class="close-button" type="button" aria-label="Tutup dokumen">×</button></div><pre id="documentContent" class="document-content"></pre></div>
+  </div>
+
   <div id="dropOverlay" class="drop-overlay" aria-hidden="true">
-    <div class="drop-graphic"><div class="drop-icon"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 16V5m0 0 4 4m-4-4L8 9M5 18v2h14v-2" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div><strong>Lepaskan JSON atau gambar</strong><span>Di kanvas: tambah ke board aktif · Di daftar board: buat board baru</span></div>
+    <div class="drop-graphic"><div class="drop-icon"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 16V5m0 0 4 4m-4-4L8 9M5 18v2h14v-2" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div><strong>Lepaskan board, media, atau dokumen</strong><span>Di kanvas: tambah ke board aktif · Di daftar board: buat board baru</span></div>
   </div>
 
   <script>
@@ -973,6 +1012,10 @@
       const mobileZoomOut = document.getElementById('mobileZoomOut');
       const mobileZoomIn = document.getElementById('mobileZoomIn');
       const mobileFit = document.getElementById('mobileFit');
+      const documentModal = document.getElementById('documentModal');
+      const documentTitle = document.getElementById('documentTitle');
+      const documentContent = document.getElementById('documentContent');
+      const closeDocumentModalButton = document.getElementById('closeDocumentModal');
       const STORAGE_KEY = 'whiteboard-app-v0.2';
       const LEGACY_STORAGE_KEY = 'whiteboard-kartu-v0.1';
       const SNAP_STORAGE_KEY = 'whiteboard-snap-enabled';
@@ -998,15 +1041,14 @@
       let pendingConnectionId = null;
       const boardHistories = new Map();
       let clipboardData = null;
-      let internalClipboardPreferred = false;
-      let pasteSerial = 0;
+      let internalClipboardToken = '';
+      let preparingInternalCopy = false;
       let undoStack = [];
       let redoStack = [];
       let lastSnapshot = '';
       let lastCardAction = null;
       let suppressNextContextMenu = false;
       let dragDepth = 0;
-      let lastCompletedDrag = null;
       let snapEnabled = localStorage.getItem(SNAP_STORAGE_KEY) !== 'false';
       let motionFrame = 0;
       let resize = null;
@@ -1064,12 +1106,15 @@
       // Ikon antarmuka memakai geometri Lucide dan ditanam lokal agar tetap bekerja offline.
       const iconPaths = {
         folder: '<path d="m3 7 2-2h5l2 2h9v12H3Z"/><path d="M3 9h18"/>',
+        file: '<path d="M6 2h8l4 4v16H6Z"/><path d="M14 2v5h5M9 12h6M9 16h6"/>',
         plus: '<path d="M12 5v14M5 12h14"/>', pencil: '<path d="m4 20 4.5-1 10-10-3.5-3.5-10 10Z"/><path d="m13.5 6.5 3.5 3.5"/>',
         image: '<rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="8.5" cy="9" r="1.5"/><path d="m21 15-5-5L5 20"/>',
         download: '<path d="M12 3v12m0 0 4-4m-4 4-4-4M5 19h14"/>', upload: '<path d="M12 16V4m0 0 4 4m-4-4L8 8M5 20h14"/>',
         undo: '<path d="m9 7-5 5 5 5"/><path d="M4 12h9a7 7 0 0 1 7 7"/>', redo: '<path d="m15 7 5 5-5 5"/><path d="M20 12h-9a7 7 0 0 0-7 7"/>',
         copy: '<rect x="8" y="8" width="12" height="12" rx="2"/><path d="M16 8V5a1 1 0 0 0-1-1H5a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h3"/>',
         group: '<rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="8.5" y="14" width="7" height="7" rx="1"/>',
+        ungroup: '<rect x="3" y="4" width="7" height="7" rx="1"/><rect x="14" y="13" width="7" height="7" rx="1"/><path d="M10 7h4m-2-2 2 2-2 2M14 17h-4m2-2-2 2 2 2"/>',
+        trash: '<path d="M4 7h16M9 7V4h6v3M7 7l1 14h8l1-14M10 11v6M14 11v6"/>',
         scan: '<path d="M3 7V4a1 1 0 0 1 1-1h3M17 3h3a1 1 0 0 1 1 1v3M21 17v3a1 1 0 0 1-1 1h-3M7 21H4a1 1 0 0 1-1-1v-3"/>',
         magnet: '<path d="M6 15V8a6 6 0 0 1 12 0v7"/><path d="M6 15h4v4H6zM14 15h4v4h-4z"/>', keyboard: '<rect x="3" y="5" width="18" height="14" rx="2"/><path d="M7 9h.01M11 9h.01M15 9h.01M19 9h.01M8 13h8"/>',
         front: '<rect x="8" y="8" width="11" height="11" rx="2"/><path d="M16 8V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h3"/>', back: '<rect x="5" y="5" width="11" height="11" rx="2"/><path d="M8 16v3a2 2 0 0 0 2 2h9a2 2 0 0 0 2-2v-9a2 2 0 0 0-2-2h-3"/>',
@@ -1098,6 +1143,8 @@
         document.querySelector('.drop-icon')?.replaceChildren(lucideIcon('upload'));
         const headerMenus = [['File','folder'],['Edit','pencil'],['Tampilan','scan'],['Susun','group']];
         document.querySelectorAll('.menu-trigger').forEach((trigger, index) => { const [label, icon] = headerMenus[index] || ['Menu','more']; trigger.setAttribute('aria-label', label); trigger.title = label; trigger.replaceChildren(lucideIcon(icon)); });
+        const quickIcons={quickUndo:'undo',quickRedo:'redo',quickDuplicate:'copy',quickGroup:'group',quickUngroup:'ungroup',quickDelete:'trash',quickFit:'scan'};
+        Object.entries(quickIcons).forEach(([id,name])=>document.getElementById(id)?.replaceChildren(lucideIcon(name)));
       }
 
       function applyCardStyle(el, card) {
@@ -1216,7 +1263,6 @@
       }
 
       function saveState(recordHistory = true) {
-        if (!drag) lastCompletedDrag = null;
         const snapshot = serializeState();
         const historySnapshot = serializeHistoryState();
         const changed = Boolean(lastSnapshot && historySnapshot !== lastSnapshot);
@@ -1253,7 +1299,7 @@
       }
 
       function applySnapshot(snapshot) {
-        lastCompletedDrag = null; pendingConnectionId = null;
+        pendingConnectionId = null;
         const state = JSON.parse(snapshot);
         if (state.boardId !== currentBoardId || !Array.isArray(state.cards)) return;
         cards = state.cards;
@@ -1361,7 +1407,10 @@
         const cardScale = Math.max(.04, Number(card.scale) || 1);
         el.style.zoom=rich?String(camera.scale):'';
         el.style.setProperty('--zoom', rich?1:camera.scale);
+        el.style.setProperty('--card-scale',cardScale);
         el.style.transform = `scale(${cardScale})`;
+        const resizeHandle=el.querySelector('.card-resize');
+        if(resizeHandle)resizeHandle.style.transform=`scale(${1/cardScale})`;
         const stage=el.querySelector('.media-stage'); if(stage)stage.style.transform='scale('+camera.scale+')';
         el.style.left = `${(camera.x + card.x * camera.scale)/(rich?camera.scale:1)}px`;
         el.style.top = `${(camera.y + card.y * camera.scale)/(rich?camera.scale:1)}px`;
@@ -1369,6 +1418,11 @@
           el.style.setProperty('--media-width', `${card.width * camera.scale}px`);
           el.style.setProperty('--media-height', `${card.height * camera.scale}px`);
         }
+      }
+
+      function syncResizeHandle(el, card) {
+        const handle=el?.querySelector('.card-resize');
+        if(handle)handle.style.transform=`scale(${1/Math.max(.04,Number(card.scale)||1)})`;
       }
 
       function cardElement(id) {
@@ -1529,30 +1583,9 @@
         cards.forEach(card => { if (card.groupId && groupIds.has(card.groupId)) selectedIds.add(card.id); });
       }
 
-      function groupSelectedCardsLegacy() {
-        const active = cards.filter(card => selectedIds.has(card.id));
-        if (active.length < 2) return;
-        const firstGroup = active[0].groupId;
-        if (firstGroup && active.every(card => card.groupId === firstGroup)) return;
-        const groupId = makeId('group');
-        active.forEach(card => { card.groupId = groupId; });
-        lastCardAction = { type: 'group' };
-        saveState();
-      }
-
-      function ungroupSelectedCardsLegacy() {
-        const active = cards.filter(card => selectedIds.has(card.id) && card.groupId);
-        if (!active.length) return;
-        const groupIds = new Set(active.map(card => card.groupId));
-        cards.forEach(card => { if (groupIds.has(card.groupId)) card.groupId = null; });
-        lastCardAction = { type: 'ungroup' };
-        saveState();
-        syncSelection();
-      }
-
-      function renderCardLegacy(card) {
+      function createCardElement(card) {
         const el = document.createElement('article');
-        el.className = `card${['image','video','audio','svg'].includes(card.type) ? ' media-card' : ''}${card.kind === 'pasted-text' ? ' text-card' : ''}`;
+        el.className = `card${['image','video','audio','svg'].includes(card.type) ? ' media-card' : ''}${card.type === 'document' ? ' document-card' : ''}${card.kind === 'pasted-text' ? ' text-card' : ''}`;
         el.dataset.id = card.id;
         positionCard(el, card);
         if (card.type === 'image' || card.type === 'svg') {
@@ -1567,6 +1600,10 @@
           el.style.setProperty('--media-width', `${Math.max(220, card.width || 260) * camera.scale}px`); el.style.setProperty('--media-height', `${64 * camera.scale}px`);
           const audio = document.createElement('audio'); audio.src = card.data; audio.controls = true; audio.preload = 'metadata'; audio.style.cssText = 'width:100%;height:100%;padding:10px';
           audio.addEventListener('play', () => world.querySelectorAll('audio').forEach(other => { if (other !== audio) other.pause(); })); el.append(audio);
+        } else if (card.type === 'document') {
+          el.setAttribute('aria-label', `Dokumen ${card.name || ''}`.trim());
+          el.append(lucideIcon('file'));
+          const label = document.createElement('span'); label.textContent = card.name || 'Dokumen'; el.append(label);
         } else {
           applyCardStyle(el, card);
           if (card.textSize) el.style.setProperty('--text-size', `${card.textSize}px`);
@@ -1585,6 +1622,7 @@
           handle.setAttribute('aria-label', 'Ubah ukuran media');
           handle.addEventListener('pointerdown', startCardResize);
           el.append(handle);
+          syncResizeHandle(el,card);
         }
 
         if (['audio','video'].includes(card.type)) installMediaPlayer(el, card);
@@ -1593,14 +1631,15 @@
           if (activeTool !== 'cursor') return;
           event.preventDefault();
           event.stopPropagation();
-          if (!isMediaCard(card)) beginEdit(card.id);
+          if (card.type === 'document') openDocumentViewer(card);
+          else if (!isMediaCard(card)) beginEdit(card.id);
         });
         world.appendChild(el);
         return el;
       }
 
       function renderCard(card) {
-        return renderCardLegacy(card);
+        return createCardElement(card);
       }
 
       function startCardResize(event) {
@@ -1653,13 +1692,70 @@
         });
       }
 
+      async function readAudioMetadata(file) {
+        const buffer = await file.arrayBuffer();
+        const bytes = new Uint8Array(buffer);
+        const result = { title: file.name.replace(/\.[^.]+$/, ''), cover: '' };
+        if (bytes.length < 10 || String.fromCharCode(...bytes.slice(0,3)) !== 'ID3') return result;
+        const size = (bytes[6]<<21)|(bytes[7]<<14)|(bytes[8]<<7)|bytes[9];
+        let offset = 10;
+        const decode = data => new TextDecoder(data[0] === 3 ? 'utf-8' : 'iso-8859-1').decode(data.slice(1)).replace(/\0/g,'').trim();
+        while (offset + 10 <= Math.min(bytes.length, size + 10)) {
+          const id = String.fromCharCode(...bytes.slice(offset, offset + 4));
+          const frameSize = (bytes[offset+4]<<24)|(bytes[offset+5]<<16)|(bytes[offset+6]<<8)|bytes[offset+7];
+          if (!frameSize || !/^\w{4}$/.test(id)) break;
+          const data = bytes.slice(offset + 10, offset + 10 + frameSize);
+          if (id === 'TIT2') result.title = decode(data) || result.title;
+          if (id === 'APIC' && data.length > 8) {
+            let p = 1; while (p < data.length && data[p] !== 0) p++;
+            const mime = new TextDecoder().decode(data.slice(1,p)) || 'image/jpeg'; p += 2;
+            const doubleNull = data[0] === 1 || data[0] === 2;
+            while (p < data.length - 1 && (doubleNull ? !(data[p]===0 && data[p+1]===0) : data[p]!==0)) p += doubleNull ? 2 : 1;
+            p += doubleNull ? 2 : 1;
+            if (p < data.length) result.cover = await new Promise(resolve => { const reader=new FileReader();reader.onload=()=>resolve(reader.result);reader.readAsDataURL(new Blob([data.slice(p)],{type:mime})); });
+          }
+          offset += 10 + frameSize;
+        }
+        return result;
+      }
+
+      const textFilePattern = /\.(txt|md|markdown|csv|log|xml|html|css|js|ts|py)$/i;
+      const audioFilePattern = /\.(mp3|wav|ogg|oga|m4a|aac|flac|opus)$/i;
+      const videoFilePattern = /\.(mp4|webm|ogv|mov|m4v)$/i;
+      async function importDocumentFile(file, clientX = window.innerWidth/2, clientY = window.innerHeight/2) {
+        if (!currentBoard()) return openBoardOverview();
+        const point = screenToWorld(clientX, clientY);
+        const content = await file.text();
+        const card = { id:nextId++, type:'document', x:point.x-54, y:point.y-46, width:108, height:92, name:file.name, mime:file.type||'text/plain', content, groupId:null };
+        cards.push(card); renderCard(card); setSelected(card.id); saveState();
+      }
+
+      function openDocumentViewer(card) {
+        documentTitle.textContent = card.name || 'Dokumen';
+        documentContent.textContent = card.content || '';
+        documentModal.classList.add('open'); documentModal.setAttribute('aria-hidden','false'); updateScrim();
+      }
+
+      function readVideoDimensions(data) {
+        return new Promise(resolve => {
+          const video=document.createElement('video'); video.preload='metadata'; video.muted=true;
+          video.onloadedmetadata=()=>resolve({width:video.videoWidth||320,height:video.videoHeight||180});
+          video.onerror=()=>resolve({width:320,height:180}); video.src=data;
+        });
+      }
+
       async function importMediaFile(file, clientX = window.innerWidth / 2, clientY = window.innerHeight / 2) {
         try {
           if (!file || !currentBoard()) return openBoardOverview();
-          if (file.type.startsWith('audio/') || file.type.startsWith('video/')) {
+          if (textFilePattern.test(file.name)) return importDocumentFile(file, clientX, clientY);
+          if (file.type.startsWith('audio/') || file.type.startsWith('video/') || audioFilePattern.test(file.name) || videoFilePattern.test(file.name)) {
             const data = await new Promise((resolve, reject) => { const reader = new FileReader(); reader.onload = () => resolve(reader.result); reader.onerror = reject; reader.readAsDataURL(file); });
-            const point = screenToWorld(clientX, clientY); const type = file.type.startsWith('audio/') ? 'audio' : 'video';
-            const card = { id: nextId++, type, x: point.x - 130, y: point.y - (type === 'audio' ? 32 : 90), width: 320, height: type === 'audio' ? 110 : 246, data, name: file.name, groupId: null };
+            const point = screenToWorld(clientX, clientY); const type = file.type.startsWith('audio/') || audioFilePattern.test(file.name) ? 'audio' : 'video';
+            const metadata = type === 'audio' ? await readAudioMetadata(file).catch(()=>({title:file.name.replace(/\.[^.]+$/,''),cover:''})) : null;
+            const videoSize = type === 'video' ? await readVideoDimensions(data) : null;
+            const width = type === 'audio' ? 180 : Math.min(420, Math.max(220, videoSize.width));
+            const height = type === 'audio' ? 180 : Math.round(width * videoSize.height / videoSize.width) + 40;
+            const card = { id: nextId++, type, x: point.x-width/2, y: point.y-height/2, width, height, data, name: metadata?.title || file.name, cover: metadata?.cover || '', mime:file.type, groupId: null };
             cards.push(card); renderCard(card); setSelected(card.id); saveState(); return;
           }
           if (!currentBoard()) return openBoardOverview();
@@ -1717,7 +1813,9 @@
         if (editingId !== null && editingId !== id) finishEdit(true);
         const el = cardElement(id);
         if (!el) return;
-        if (isMediaCard(cards.find(card => card.id === id))) return;
+        const targetCard = cards.find(card => card.id === id);
+        if (targetCard?.type === 'document') { openDocumentViewer(targetCard); return; }
+        if (isMediaCard(targetCard)) return;
         setSelected(id);
         editingId = id;
         el.classList.add('editing');
@@ -1818,22 +1916,6 @@
         textFormatBar.classList.remove('open');
       }
 
-      function activateTextFormatting() {
-        if (selectedIds.size !== 1) return;
-        const id = [...selectedIds][0];
-        const card = cards.find(item => item.id === id);
-        if (!card || ['image','video','audio','svg'].includes(card.type)) return;
-        if (!card.richText) {
-          card.richText = true;
-          const holder = document.createElement('div');
-          holder.textContent = card.text || '';
-          card.html = holder.innerHTML.replace(/\n/g, '<br>');
-          const text = cardElement(id)?.querySelector('.card-text');
-          if (text) text.innerHTML = card.html;
-          saveState();
-        }
-        beginEdit(id);
-      }
 
       function switchCardTextMode(mode) {
         if (selectedIds.size !== 1) return;
@@ -1876,6 +1958,7 @@
           ghost.removeAttribute('aria-label');
           ghost.classList.remove('selected', 'multi-selected', 'dragging', 'editing');
           ghost.classList.add('drag-ghost');
+          ghost.style.zIndex = '-1';
           positionCard(ghost, { ...item.card, x: item.x, y: item.y });
           world.appendChild(ghost);
           return ghost;
@@ -1923,46 +2006,12 @@
         suppressNextContextMenu = true;
         window.setTimeout(() => { suppressNextContextMenu = false; }, 500);
         saveState();
-        lastCompletedDrag = null;
-        return true;
-      }
-
-      function convertCompletedDragToDuplicate(targetId) {
-        const snapshot = lastCompletedDrag;
-        if (!snapshot || Date.now() - snapshot.finishedAt > 5000 || !snapshot.items.some(item => item.id === targetId)) return false;
-        if (snapshot.beforeSnapshot) { lastSnapshot = snapshot.beforeSnapshot; if (undoStack.at(-1) === lastSnapshot) undoStack.pop(); }
-        const sourceIds = new Set(snapshot.items.map(item => item.id));
-        const idMap = new Map();
-        const groupMap = new Map();
-        const added = snapshot.items.map(item => {
-          const source = cards.find(card => card.id === item.id);
-          if (!source) return null;
-          source.x = item.startX;
-          source.y = item.startY;
-          positionCard(cardElement(source.id), source);
-          if (source.groupId && !groupMap.has(source.groupId)) groupMap.set(source.groupId, makeId('group'));
-          const duplicate = { ...source, id: nextId++, x: item.endX, y: item.endY, groupId: source.groupId ? groupMap.get(source.groupId) : null };
-          idMap.set(source.id, duplicate.id);
-          cards.push(duplicate);
-          renderCard(duplicate);
-          return duplicate;
-        }).filter(Boolean);
-        connections.filter(item => sourceIds.has(item.from) && sourceIds.has(item.to)).forEach(source => {
-          connections.push({ ...source, id: makeId('connection'), from: idMap.get(source.from), to: idMap.get(source.to) });
-        });
-        selectedIds = new Set(added.map(card => card.id));
-        syncSelection();
-        renderConnections();
-        lastCardAction = { type: 'duplicateMove', dx: snapshot.dx, dy: snapshot.dy };
-        lastCompletedDrag = null;
-        saveState();
         return true;
       }
 
       function startDrag(event) {
         if (event.target.closest('button, audio, video, input, progress')) return;
         if (event.button !== 0 || editingId !== null) return;
-        lastCompletedDrag = null;
         const el = event.currentTarget;
         const id = Number(el.dataset.id);
         const card = cards.find(item => item.id === id);
@@ -2062,13 +2111,6 @@
         window.removeEventListener('pointercancel', endDrag);
         if (completedDrag.moved) {
           lastCardAction = { type: 'move', dx: completedDrag.lastDx, dy: completedDrag.lastDy };
-          lastCompletedDrag = {
-            beforeSnapshot: lastSnapshot,
-            finishedAt: Date.now(),
-            dx: completedDrag.lastDx,
-            dy: completedDrag.lastDy,
-            items: completedDrag.items.map(item => ({ id: item.card.id, startX: item.x, startY: item.y, endX: item.card.x, endY: item.card.y }))
-          };
           saveState();
         }
         removeDragGhosts(completedDrag);
@@ -2199,7 +2241,7 @@
       }
 
       function applyColorToSelection(color, target) {
-        const active = cards.filter(card => selectedIds.has(card.id) && !isMediaCard(card));
+        const active = cards.filter(card => selectedIds.has(card.id) && !isMediaCard(card) && card.type !== 'document');
         if (!active.length) return;
         rememberColor(color);
         const normalized = color === 'transparent' && target === 'card' ? 'transparent' : normalizeColor(color, target === 'text' ? '#ffffff' : '#3978f6');
@@ -2213,29 +2255,30 @@
         saveState();
       }
 
-      function copySelectedCards() {
+      function copySelectedCards(writeSystemClipboard = true) {
         const active = cards.filter(card => selectedIds.has(card.id));
         if (!active.length) return false;
+        const metrics=active.map(card=>{const rect=cardElement(card.id)?.getBoundingClientRect();return {card,width:rect?rect.width/camera.scale:(card.width||112),height:rect?rect.height/camera.scale:(card.height||48)};});
+        const bounds={left:Math.min(...metrics.map(x=>x.card.x)),top:Math.min(...metrics.map(x=>x.card.y)),right:Math.max(...metrics.map(x=>x.card.x+x.width)),bottom:Math.max(...metrics.map(x=>x.card.y+x.height))};
         clipboardData = {
           cards: active.map(card => ({ ...card, sourceId: card.id })),
-          connections: connections.filter(item => selectedIds.has(item.from) && selectedIds.has(item.to)).map(item => ({ ...item }))
+          connections: connections.filter(item => selectedIds.has(item.from) && selectedIds.has(item.to)).map(item => ({ ...item })), bounds
         };
-        pasteSerial = 0;
-        internalClipboardPreferred = true;
+        if(writeSystemClipboard){internalClipboardToken=makeId('clipboard');preparingInternalCopy=true;document.execCommand('copy');preparingInternalCopy=false;}
         return true;
       }
 
       function pasteCards() {
         if (!clipboardData || !clipboardData.cards.length) return;
-        pasteSerial += 1;
-        const offset = 0;
+        const point=screenToWorld(lastPointer.x,lastPointer.y), bounds=clipboardData.bounds || {left:0,top:0,right:0,bottom:0};
+        const offsetX=point.x-(bounds.left+bounds.right)/2, offsetY=point.y-(bounds.top+bounds.bottom)/2;
         const idMap = new Map();
         const groupMap = new Map();
         const added = clipboardData.cards.map(source => {
           const id = nextId++;
           idMap.set(source.sourceId, id);
           if (source.groupId && !groupMap.has(source.groupId)) groupMap.set(source.groupId, makeId('group'));
-          return { ...source, id, x: source.x + offset, y: source.y + offset, groupId: source.groupId ? groupMap.get(source.groupId) : null };
+          return { ...source, id, x: source.x + offsetX, y: source.y + offsetY, groupId: source.groupId ? groupMap.get(source.groupId) : null };
         });
         added.forEach(card => { cards.push(card); renderCard(card); });
         clipboardData.connections.forEach(source => {
@@ -2255,7 +2298,7 @@
       }
 
       function duplicateSelectedCards() {
-        if (copySelectedCards()) {
+        if (copySelectedCards(false)) {
           pasteCards();
           lastCardAction = { type: 'duplicate' };
         }
@@ -2333,7 +2376,7 @@
         const history=boardHistories.get(id);
         undoStack = history?.undo || [];
         redoStack = history?.redo || [];
-        lastCompletedDrag=null; lastCardAction=null;
+        lastCardAction=null;
         saveState(false);
         renderAll();
       }
@@ -2405,7 +2448,8 @@
           if (card.groupId && !importedGroupMap.has(card.groupId)) importedGroupMap.set(card.groupId, makeId('group'));
           const groupId = card.groupId ? importedGroupMap.get(card.groupId) : null;
           const scale = Math.max(.04, Number(card.scale) || 1);
-          if (['image','audio','video','svg'].includes(card.type) && typeof card.data === 'string') return { id, type: card.type, x: card.x, y: card.y, width: Number(card.width) || 240, height: Number(card.height) || 160, data: card.data, name: String(card.name || 'Media'), groupId, scale };
+          if (['image','audio','video','svg'].includes(card.type) && typeof card.data === 'string') return { id, type: card.type, x: card.x, y: card.y, width: Number(card.width) || 240, height: Number(card.height) || 160, data: card.data, name: String(card.name || 'Media'), cover: typeof card.cover==='string'?card.cover:'', mime:String(card.mime||''), groupId, scale };
+          if (card.type === 'document') return { id, type:'document', x:card.x, y:card.y, width:108, height:92, name:String(card.name||'Dokumen'), mime:String(card.mime||'text/plain'), content:String(card.content||''), groupId, scale };
           return { id, x: card.x, y: card.y, text: escapeText(card.text), html: card.richText ? sanitizeRichHtml(card.html || '') : '', richText: Boolean(card.richText), kind: card.kind === 'pasted-text' ? 'pasted-text' : undefined, textSize: Number(card.textSize) || undefined, color: normalizeColor(card.color, '#3978f6'), textColor: normalizeColor(card.textColor, '#ffffff'), groupId, scale };
         });
         const importedConnections = Array.isArray(source.connections) ? source.connections.filter(item => importedIdMap.has(Number(item.from)) && importedIdMap.has(Number(item.to))).map(item => ({ id: makeId('connection'), from: importedIdMap.get(Number(item.from)), to: importedIdMap.get(Number(item.to)), label: String(item.label || '') })) : [];
@@ -2514,8 +2558,6 @@
           convertActiveDragToDuplicate(event);
           return;
         }
-        const targetCard = event.target.closest?.('.card');
-        if (targetCard && convertCompletedDragToDuplicate(Number(targetCard.dataset.id))) return;
         if (suppressNextContextMenu) {
           suppressNextContextMenu = false;
           return;
@@ -2532,7 +2574,7 @@
         const selectedCard = card && selectedIds.size === 1 ? cards.find(item => item.id === [...selectedIds][0]) : null;
         const richAction = contextMenu.querySelector('[data-action="to-rich"]');
         const plainAction = contextMenu.querySelector('[data-action="to-plain"]');
-        const canSwitch = selectedCard && !isMediaCard(selectedCard);
+        const canSwitch = selectedCard && !isMediaCard(selectedCard) && selectedCard.type !== 'document';
         richAction.style.display = canSwitch && !selectedCard.richText ? '' : 'none';
         plainAction.style.display = canSwitch && selectedCard.richText ? '' : 'none';
         contextMenu.classList.add('open');
@@ -2566,7 +2608,7 @@
       }
 
       function updateScrim() {
-        const open = versionModal.classList.contains('open') || exportModal.classList.contains('open') || settingsModal.classList.contains('open');
+        const open = versionModal.classList.contains('open') || exportModal.classList.contains('open') || settingsModal.classList.contains('open') || documentModal.classList.contains('open');
         scrim.classList.toggle('open', open);
       }
 
@@ -2622,13 +2664,13 @@
           card.className = `board-card${board.id === currentBoardId ? ' active' : ''}${board.id === overviewSelectedBoardId ? ' focused' : ''}`;
           card.innerHTML = `<div class="board-thumbnail" aria-hidden="true"></div><strong></strong><span></span>`;
           const preview = card.querySelector('.board-thumbnail');
-          const boardCards = (board.cards || []).slice(0, 10);
-          const minX = Math.min(0, ...boardCards.map(item => Number(item.x) || 0));
-          const minY = Math.min(0, ...boardCards.map(item => Number(item.y) || 0));
-          const maxX = Math.max(1, ...boardCards.map(item => (Number(item.x) || 0) + (Number(item.width) || 100)));
-          const maxY = Math.max(1, ...boardCards.map(item => (Number(item.y) || 0) + (Number(item.height) || 50)));
+          const boardCards = board.cards || [];
+          const minX = boardCards.length ? Math.min(...boardCards.map(item => Number(item.x) || 0)) : 0;
+          const minY = boardCards.length ? Math.min(...boardCards.map(item => Number(item.y) || 0)) : 0;
+          const maxX = boardCards.length ? Math.max(...boardCards.map(item => (Number(item.x) || 0) + (Number(item.width) || 100) * (Number(item.scale)||1))) : 1;
+          const maxY = boardCards.length ? Math.max(...boardCards.map(item => (Number(item.y) || 0) + (Number(item.height) || 50) * (Number(item.scale)||1))) : 1;
           const spanX = Math.max(1, maxX - minX), spanY = Math.max(1, maxY - minY);
-          boardCards.forEach(item => { const mini = document.createElement('i'); mini.className='board-thumbnail-card'; mini.style.left=`${6 + ((item.x-minX)/spanX)*84}%`; mini.style.top=`${6 + ((item.y-minY)/spanY)*78}%`; mini.style.width=`${Math.max(9, Math.min(44, ((item.width || 96)/spanX)*84))}%`; mini.style.height=`${Math.max(6, Math.min(24, ((item.height || 40)/spanY)*78))}%`; mini.style.background=item.type ? '#eef2f7' : (item.color || '#3978f6'); preview.append(mini); });
+          boardCards.forEach(item => { const mini = document.createElement('i'); mini.className='board-thumbnail-card'; const s=Number(item.scale)||1; mini.style.left=`${4 + ((item.x-minX)/spanX)*92}%`; mini.style.top=`${4 + ((item.y-minY)/spanY)*90}%`; mini.style.width=`${Math.max(1.5, Math.min(92, (((item.width || 96)*s)/spanX)*92))}%`; mini.style.height=`${Math.max(1.5, Math.min(90, (((item.height || 40)*s)/spanY)*90))}%`; mini.style.background=item.type ? '#eef2f7' : (item.color || '#3978f6'); preview.append(mini); });
           card.querySelector('strong').textContent = board.name;
           card.querySelector('span').textContent = `${board.cards?.length || 0} kartu · ${board.connections?.length || 0} garis`;
           const menuButton = document.createElement('button');
@@ -2749,6 +2791,7 @@
         closeExportDialog();
         closeBoardOverview();
         closeSettings();
+        documentModal.classList.remove('open'); documentModal.setAttribute('aria-hidden','true'); updateScrim();
       }
 
       viewport.addEventListener('dblclick', event => {
@@ -2789,7 +2832,7 @@
         const nativeZoomKey = (event.ctrlKey || event.metaKey) && ['+', '-', '=', '0'].includes(event.key);
         if (nativeZoomKey) event.preventDefault();
         const formFocused = event.target.matches?.('input, select, textarea, [contenteditable="true"]');
-        const overlayOpen = versionModal.classList.contains('open') || exportModal.classList.contains('open') || boardOverviewModal.classList.contains('open') || settingsModal.classList.contains('open');
+        const overlayOpen = versionModal.classList.contains('open') || exportModal.classList.contains('open') || boardOverviewModal.classList.contains('open') || settingsModal.classList.contains('open') || documentModal.classList.contains('open');
         const shortcutsEnabled = Boolean(currentBoard()) && editingId === null && !overlayOpen && !formFocused;
         const command = event.ctrlKey || event.metaKey;
         const key = event.key.toLowerCase();
@@ -2908,15 +2951,23 @@
       });
       document.addEventListener('gesturestart', event => event.preventDefault(), { passive: false });
       document.addEventListener('gesturechange', event => event.preventDefault(), { passive: false });
-      document.addEventListener('pointermove', event => { lastPointer = { x: event.clientX, y: event.clientY }; }, { passive: true });
+      document.addEventListener('pointermove', event => { if (viewport.contains(event.target)) lastPointer = { x: event.clientX, y: event.clientY }; }, { passive: true });
+      document.addEventListener('copy', event => {
+        if (!preparingInternalCopy || !clipboardData?.cards?.length) return;
+        const plain=clipboardData.cards.map(card=>card.text||card.name||card.type||'Kartu').join('\n');
+        event.clipboardData.setData('text/plain',plain);
+        event.clipboardData.setData('text/html',`<!--whiteboard:${internalClipboardToken}--><span>${plain.replace(/[&<>]/g,char=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[char]))}</span>`);
+        try{event.clipboardData.setData('application/x-whiteboard-cards',internalClipboardToken);}catch{}
+        event.preventDefault();
+      });
       document.addEventListener('paste', event => {
         if (editingId !== null || event.target.matches?.('input, textarea, [contenteditable="true"]')) return;
-        const imageItem = [...(event.clipboardData?.items || [])].find(item => item.kind === 'file' && item.type.startsWith('image/'));
-        const file = imageItem?.getAsFile();
+        const fileItem = [...(event.clipboardData?.items || [])].find(item => item.kind === 'file');
+        const file = fileItem?.getAsFile();
         if (file) {
           event.preventDefault();
           importMediaFile(file, lastPointer.x, lastPointer.y);
-        } else if (clipboardData?.cards?.length && internalClipboardPreferred) {
+        } else if (clipboardData?.cards?.length && (event.clipboardData?.getData('application/x-whiteboard-cards')===internalClipboardToken || event.clipboardData?.getData('text/html')?.includes(`whiteboard:${internalClipboardToken}`))) {
           event.preventDefault();
           pasteCards();
         } else {
@@ -2927,7 +2978,6 @@
           }
         }
       });
-      window.addEventListener('blur', () => { internalClipboardPreferred = false; });
       window.addEventListener('beforeunload', event => {
         if (!dirty) return;
         event.preventDefault();
@@ -2995,6 +3045,13 @@
       document.getElementById('backMenu').addEventListener('click', () => moveSelectedToLayer('bottom'));
       document.getElementById('alignLeftMenu').addEventListener('click', () => alignSelected('left'));
       document.getElementById('alignTopMenu').addEventListener('click', () => alignSelected('top'));
+      document.getElementById('quickUndo').addEventListener('click', undo);
+      document.getElementById('quickRedo').addEventListener('click', redo);
+      document.getElementById('quickDuplicate').addEventListener('click', duplicateSelectedCards);
+      document.getElementById('quickGroup').addEventListener('click', groupSelectedCards);
+      document.getElementById('quickUngroup').addEventListener('click', ungroupSelectedCards);
+      document.getElementById('quickDelete').addEventListener('click', deleteSelectedCards);
+      document.getElementById('quickFit').addEventListener('click', fitAllCards);
       snapToggleMenu.addEventListener('click', () => {
         snapEnabled = !snapEnabled;
         localStorage.setItem(SNAP_STORAGE_KEY, String(snapEnabled));
@@ -3020,6 +3077,8 @@
       document.querySelectorAll('.menu-command').forEach(command => command.addEventListener('click', closeHeaderMenus));
       closeSettingsButton.addEventListener('click', closeSettings);
       settingsModal.addEventListener('pointerdown', event => { if (event.target === settingsModal) closeSettings(); });
+      closeDocumentModalButton.addEventListener('click', () => { documentModal.classList.remove('open'); documentModal.setAttribute('aria-hidden','true'); updateScrim(); });
+      documentModal.addEventListener('pointerdown', event => { if (event.target === documentModal) closeDocumentModalButton.click(); });
       contextMenu.addEventListener('click', event => {
         const item = event.target.closest('[data-action]');
         if (item) runContextAction(item.dataset.action);
@@ -3062,11 +3121,11 @@
         dragDepth = 0;
         dropOverlay.classList.remove('open');
         dropOverlay.setAttribute('aria-hidden', 'true');
-        const file = [...(event.dataTransfer?.files || [])].find(item => item.name.toLowerCase().endsWith('.json') || item.type === 'application/json' || item.type.startsWith('image/') || item.type.startsWith('audio/') || item.type.startsWith('video/'));
+        const file = [...(event.dataTransfer?.files || [])].find(item => item.name.toLowerCase().endsWith('.json') || item.type === 'application/json' || item.type.startsWith('image/') || item.type.startsWith('audio/') || item.type.startsWith('video/') || audioFilePattern.test(item.name) || videoFilePattern.test(item.name) || textFilePattern.test(item.name));
         const dropMode = boardOverviewModal.classList.contains('open') ? 'board-list' : 'merge';
-        if (file && (file.type.startsWith('image/') || file.type.startsWith('audio/') || file.type.startsWith('video/')) && dropMode === 'merge') importMediaFile(file, event.clientX, event.clientY);
+        if (file && (file.type.startsWith('image/') || file.type.startsWith('audio/') || file.type.startsWith('video/') || audioFilePattern.test(file.name) || videoFilePattern.test(file.name) || textFilePattern.test(file.name)) && dropMode === 'merge') importMediaFile(file, event.clientX, event.clientY);
         else if (file) importBoardFile(file, dropMode);
-        else window.alert('Gunakan file JSON atau gambar PNG, JPEG, WebP, atau GIF.');
+        else window.alert('Gunakan JSON, media yang didukung, atau file teks/dokumen.');
       });
 
 
@@ -3119,14 +3178,14 @@
         const plus=document.createElement('button');plus.textContent='+';plus.setAttribute('aria-label','Board baru');plus.onclick=()=>{addBoard();closeBoardOverview();};root.append(plus);
       }
 
-      let mediaInteraction = localStorage.getItem('whiteboard-media-interaction') === 'true';
       function installMediaPlayer(el, card) {
         el.style.setProperty('--media-width',card.width*camera.scale+'px');el.style.setProperty('--media-height',card.height*camera.scale+'px');
         el.replaceChildren(); const stage=document.createElement('div'); stage.className='media-stage';
+        if(card.type==='audio'){stage.classList.add('audio-stage');if(card.cover)stage.style.backgroundImage=`url("${card.cover}")`;}
         stage.style.width=card.width+'px';stage.style.height=card.height+'px';stage.style.transform='scale('+camera.scale+')';
-        const media=document.createElement(card.type); media.src=card.data;media.preload='metadata';media.controls=mediaInteraction;
-        media.setAttribute('playsinline','');media.style.pointerEvents=mediaInteraction?'auto':'none';
-        if(card.type==='audio'&&!mediaInteraction)media.hidden=true;
+        const media=document.createElement(card.type); media.src=card.data;media.preload='metadata';media.controls=false;
+        media.setAttribute('playsinline','');media.style.pointerEvents='none';
+        if(card.type==='audio')media.hidden=true;
         const controls=document.createElement('div');controls.className='media-controls';
         const play=document.createElement('button');play.type='button';play.textContent='▶';play.title='Putar / jeda';
         const caption=document.createElement('span');caption.className='media-caption';caption.textContent=card.name||card.type;
@@ -3138,11 +3197,10 @@
         media.addEventListener('error',()=>{caption.textContent='Format/codec tidak dapat diputar';});
         play.onclick=()=>{if(media.paused)media.play().catch(()=>caption.textContent='Media belum dapat diputar');else media.pause();};
         controls.append(play,caption,progress);stage.append(media,controls);el.append(stage);
+        const handle=document.createElement('button');handle.type='button';handle.className='card-resize';handle.setAttribute('aria-label','Ubah ukuran media');handle.addEventListener('pointerdown',startCardResize);el.append(handle);syncResizeHandle(el,card);
         stage.addEventListener('dblclick',e=>e.stopPropagation());
         [play,media].forEach(node=>node.addEventListener('pointerdown',e=>e.stopPropagation()));
       }
-      const mediaToggle=document.getElementById('mediaInteractionToggle');mediaToggle.checked=mediaInteraction;
-      mediaToggle.addEventListener('change',()=>{mediaInteraction=mediaToggle.checked;localStorage.setItem('whiteboard-media-interaction',String(mediaInteraction));cards.filter(c=>['audio','video'].includes(c.type)).forEach(c=>installMediaPlayer(cardElement(c.id),c));});
       let colorHistory=[];
       function rememberColor(color) {
         colorHistory=[color,...colorHistory.filter(c=>c!==color)].slice(0,40);
