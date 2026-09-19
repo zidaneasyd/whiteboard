@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
   <meta name="theme-color" content="#f4f1e8">
   <meta name="description" content="Whiteboard sederhana untuk membuat, menulis, dan menyusun kartu ide.">
-  <title>Whiteboard — Kartu Ide</title>
+  <title>Whiteboard v1.0.0-beta — Kartu Ide</title>
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23242a26'/%3E%3Cpath d='M17 18h30v28H17z' fill='%23fffdf5'/%3E%3Cpath d='M23 27h18M23 34h14' stroke='%23ea6a47' stroke-width='4' stroke-linecap='round'/%3E%3C/svg%3E">
   <style>
     :root {
@@ -253,6 +253,7 @@
 
     .tool-button:hover { color: var(--ink); background: #f1f4fb; }
     .tool-button.active { color: #ffffff; background: #3978f6; }
+    .tool-button:disabled { opacity:.35;cursor:not-allowed; }
     .tool-button svg { width: 15px; height: 15px; }
 
     .board-bar {
@@ -551,22 +552,28 @@
     }
     .header-brand { display: flex; align-items: center; gap: 8px; margin-right: 4px; white-space: nowrap; font-size: 11px; font-weight: 750; }
     .header-brand .brand-mark { width: 25px; height: 25px; font-size: 10px; }
-    .editor-menus { display: flex; align-self: stretch; gap: 1px; }
+    .editor-menus { display: flex; align-self: stretch; gap: 7px; }
     .quick-actions { display:flex;align-items:center;gap:5px;margin-left:4px; }
-    .quick-group { display:flex;align-items:center;gap:1px;padding:2px;border:1px solid rgba(36,42,38,.08);border-radius:7px;background:rgba(255,255,255,.34); }
+    .quick-group { position:relative;display:flex;align-items:center;gap:1px;padding:2px;background:transparent; }
+    .quick-group + .quick-group::before { content:"|";position:absolute;left:-5px;color:rgba(36,42,38,.20);font-size:13px; }
     .quick-action { display:grid;width:27px;height:27px;place-items:center;padding:0;border:0;border-radius:5px;color:#697180;background:transparent;cursor:pointer; }
     .quick-action:hover { color:#245dc9;background:rgba(234,241,255,.92); }
     .quick-action svg { width:14px;height:14px;stroke-width:1.8; }
     .app-menu { position: relative; display: flex; align-items: center; }
-    .menu-trigger { height: 30px; padding: 0 10px; border: 0; border-radius: 5px; color: #515866; background: transparent; font: 650 10px/1 inherit; cursor: pointer; }
+    .app-menu + .app-menu::before { content:"|";position:absolute;left:-5px;color:rgba(36,42,38,.22);font-size:12px; }
+    .menu-trigger { height: 28px; padding: 0 8px; border: 0; border-radius: 5px; color: #515866; background: transparent; font: 650 7px/1 inherit; cursor: pointer; }
+    .surface-hidden { display:none!important; }
+    .cursor-feedback { position:fixed;z-index:90;display:grid;width:30px;height:30px;place-items:center;border:1px solid rgba(36,42,38,.12);border-radius:50%;color:#245dc9;background:rgba(255,255,255,.94);box-shadow:0 4px 14px rgba(36,42,38,.14);pointer-events:none;transform:translate(-50%,-50%);animation:cursor-feedback .42s ease forwards; }
+    .cursor-feedback svg { width:15px;height:15px; }
+    @keyframes cursor-feedback { from{opacity:1;transform:translate(-50%,-50%) scale(.85)} to{opacity:0;transform:translate(-50%,-75%) scale(1)} }
     .menu-trigger svg { width: 16px; height: 16px; stroke-width: 1.8; }
     .menu-trigger:hover, .app-menu.open .menu-trigger { color: var(--ink); background: rgba(225,230,239,.72); }
-    .menu-popover { position: absolute; top: 42px; left: 0; display: none; min-width: 210px; padding: 6px; border: 1px solid rgba(36,42,38,.09); border-radius: 8px; background: rgba(255,255,255,.96); box-shadow: 0 12px 36px rgba(36,42,38,.13); backdrop-filter: blur(16px); }
+    .menu-popover { position: absolute; top: 42px; left: 0; display: none; min-width: 228px; padding: 5px; border: 1px solid rgba(36,42,38,.09); border-radius: 8px; background: rgba(255,255,255,.96); box-shadow: 0 12px 36px rgba(36,42,38,.13); backdrop-filter: blur(16px); }
     .app-menu.open .menu-popover { display: grid; }
-    .menu-command { display: grid; grid-template-columns: 17px 1fr auto; align-items: center; gap: 8px; width: 100%; min-height: 31px; padding: 0 9px; border: 0; border-radius: 5px; color: #343945; background: transparent; text-align: left; font: 600 10px/1.2 inherit; cursor: pointer; }
-    .menu-command > svg, .header-action svg, .tool-button svg { width: 15px; height: 15px; stroke-width: 1.8; }
+    .menu-command { display: grid; grid-template-columns: 12px minmax(0,1fr) auto; align-items: center; gap: 6px; width: 100%; min-height: 23px; padding: 0 7px; border: 0; border-radius: 5px; color: #343945; background: transparent; text-align: left; white-space:nowrap; font: 600 7px/1 inherit; cursor: pointer; }
+    .menu-command > svg, .header-action svg, .tool-button svg { width: 11px; height: 11px; stroke-width: 1.8; }
     .menu-command:hover { color: #1f55bd; background: #eef3ff; }
-    .menu-command kbd { color: #89909e; font: 500 9px/1 inherit; }
+    .menu-command kbd { color: #89909e; font: 500 6.5px/1 inherit; }
     .menu-check { width: 12px; color: #3978f6; }
     .menu-separator { height: 1px; margin: 5px 3px; background: rgba(36,42,38,.08); }
     .active-board-title { max-width: 260px; margin-left: auto; overflow: hidden; color: #3f4652; text-overflow: ellipsis; white-space: nowrap; font-size: 10px; font-weight: 700; }
@@ -584,7 +591,8 @@
     .board-library-panel { width: min(1080px, 86vw); overflow: hidden; }
     .board-library-head { margin-bottom: 18px; }
     .board-library-actions { display: flex; align-items: center; gap: 8px; margin-left: auto; }
-    .board-grid-wrap { max-height: min(68vh, 680px); overflow-y: auto; padding: 4px 8px 12px 4px; overscroll-behavior: contain; }
+    .board-grid-wrap { max-height: min(68vh, 680px); overflow-y: auto; padding: 4px 8px 12px 4px; overscroll-behavior: contain; scrollbar-width:none; }
+    .board-grid-wrap::-webkit-scrollbar { display:none; }
     .board-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 14px; }
     .board-card { position: relative; aspect-ratio: 3 / 2; min-height: 0; padding: 16px; border: 1px solid rgba(36,42,38,.11); border-radius: 9px; color: var(--ink); background: linear-gradient(145deg,#fff,#f6f8fc); text-align: left; cursor: pointer; transition: border-color .16s ease, box-shadow .16s ease, transform .16s ease; }
     .board-card:hover { border-color: #3978f6; box-shadow: 0 0 0 3px rgba(57,120,246,.10); }
@@ -623,9 +631,9 @@
       .editor-menus { min-width: 0; overflow-x: auto; scrollbar-width: none; }
       .editor-menus::-webkit-scrollbar { display: none; }
       .quick-actions { display:none; }
-      .menu-trigger { height: 38px; padding: 0 9px; font-size: 11px; }
+      .menu-trigger { height: 38px; padding: 0 9px; font-size: 9px; }
       .menu-popover { position: fixed; top: 50px; left: 8px; right: 8px; max-height: 70vh; overflow-y: auto; }
-      .menu-command { min-height: 42px; font-size: 12px; }
+      .menu-command { min-height: 38px; font-size: 9px; }
       .active-board-title { max-width: 78px; font-size: 9px; }
       .header-action { width: 38px; height: 38px; }
       .board-library-panel { width: calc(100vw - 16px); max-height: calc(100dvh - 16px); padding: 18px; }
@@ -657,14 +665,42 @@
     .color-bar::-webkit-scrollbar,.color-history::-webkit-scrollbar,.board-tabs::-webkit-scrollbar { display:none; }
     .color-swatch { width:20px !important;height:20px !important;min-height:20px;flex:0 0 20px; }
     .color-history { position:fixed;left:24px;bottom:48px;max-width:60vw;display:flex;gap:5px;overflow-x:auto;scrollbar-width:none;z-index:20;padding:4px 0; }
-    .board-tabs { position:fixed;top:52px;left:0;right:0;z-index:25;display:flex;gap:4px;padding:5px 16px;background:transparent;overflow-x:auto;scrollbar-width:none; }
-    .board-tabs button { border:0;border-radius:4px;padding:6px 12px;white-space:nowrap;background:transparent;color:#64748b;cursor:pointer; }
-    .board-tabs button.active { color:#245dc9;background:#eaf1ff; }
-    #boardOverviewModal.board-page { position:fixed;inset:0;z-index:40;background:#f8fafc;padding:48px 5vw;backdrop-filter:none; }
+    .board-tabs { position:fixed;top:52px;left:0;right:0;z-index:25;display:flex;gap:4px;padding:5px 16px;background:transparent;overflow-x:auto;scrollbar-width:none;pointer-events:none; }
+    .board-tab { display:flex;align-items:center;border-radius:4px;background:transparent;pointer-events:auto; }
+    .board-tab.active { color:#245dc9;background:#eaf1ff; }
+    .board-tab button { border:0;border-radius:4px;padding:6px 9px;white-space:nowrap;background:transparent;color:inherit;cursor:pointer;pointer-events:auto; }
+    .board-tabs > button { border:0;border-radius:4px;padding:6px 10px;background:transparent;color:#64748b;cursor:pointer;pointer-events:auto; }
+    .board-tab-close { width:24px;padding:5px!important;opacity:.48; }
+    .board-tab-close:hover { opacity:1;background:rgba(239,68,68,.10)!important;color:#dc2626; }
+    #boardOverviewModal.board-page { position:fixed;inset:52px 0 0;z-index:28;background:#f7f8fa;padding:46px 6vw;backdrop-filter:none; }
     #boardOverviewModal.board-page.open { display:block; }
     .board-page .board-library-panel { width:100%;max-width:1200px;max-height:none;margin:auto;border:0;background:transparent;box-shadow:none;transform:none;padding:0; }
     .board-page .board-grid-wrap { max-height:calc(100dvh - 190px); }
     .board-page .modal-head h2 { font-family:inherit;font-size:30px;font-weight:700; }
+    .home-layout { display:grid;grid-template-columns:170px 1fr;gap:40px;min-height:calc(100dvh - 150px); }
+    .home-nav { padding:18px 28px 0 0;border-right:1px solid rgba(36,42,38,.22); }
+    .home-nav button { display:block;width:100%;padding:8px 0;border:0;color:#7b818c;background:transparent;text-align:left;font:700 12px/1 inherit;cursor:pointer; }
+    .home-nav button.active,.home-nav button:hover { color:#3978f6; }
+    .home-content { min-width:0;display:grid;grid-template-rows:auto minmax(0,1fr) auto;max-height:calc(100dvh - 145px); }
+    .home-title { margin:0 0 22px;font-size:26px; }
+    .home-actions { position:sticky;bottom:0;display:flex;justify-content:flex-end;gap:8px;margin-top:10px;padding:12px 0 2px;background:linear-gradient(180deg,rgba(247,248,250,0),#f7f8fa 28%);z-index:2; }
+    .home-mode #viewport,.home-mode #toolRail,.home-mode #boardTabs,.home-mode #colorHistory,.home-mode #colorBar,.home-mode .status-footer,.home-mode #zoomIndicator,.home-mode #mobileControls { visibility:hidden;pointer-events:none; }
+    .home-mode .quick-actions { display:none; }
+    .home-mode .active-board-title { color:#7b818c; }
+    .menu-command:disabled,.menu-trigger:disabled { opacity:.35;pointer-events:none; }
+    .all-board-panel { width:min(920px,88vw);height:min(650px,78vh);padding:0;overflow:hidden; }
+    .all-board-head { padding:22px 24px 14px;margin:0;border-bottom:1px solid rgba(36,42,38,.08); }
+    .all-board-split { display:grid;grid-template-columns:minmax(210px,34%) 1fr;height:calc(100% - 78px); }
+    .all-board-list { overflow:auto;padding:12px;border-right:1px solid rgba(36,42,38,.10); }
+    .all-board-item { display:block;width:100%;padding:10px 12px;border:0;border-radius:6px;color:#343945;background:transparent;text-align:left;font:650 11px/1.3 inherit;cursor:pointer; }
+    .all-board-item:hover,.all-board-item.active { color:#245dc9;background:#eef3ff; }
+    .all-board-preview { min-width:0;overflow:auto;padding:24px; }
+    .all-board-preview .board-thumbnail { height:280px;margin-bottom:18px; }
+    .preview-empty { display:grid;height:100%;place-items:center;color:#9298a3;font-size:12px;text-align:center; }
+    .new-board-panel { width:min(430px,92vw); }
+    .format-choice { display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:14px 0; }
+    .format-choice label { display:flex;align-items:center;gap:8px;padding:10px;border-radius:6px;background:#f5f7fb;font-size:11px;font-weight:700;cursor:pointer; }
+    @media(max-width:720px) { .home-layout{grid-template-columns:1fr;gap:16px}.home-nav{display:flex;gap:14px;padding:0;border-right:0}.home-nav button{width:auto}.board-page .board-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.all-board-split{grid-template-columns:1fr}.all-board-preview{display:none} }
     .card.text-card .card-text * { font-size:inherit;line-height:inherit;max-width:100%;min-width:0; }
     .card.text-card .card-text p { margin:.5em 0; }
     .media-stage { position:absolute;left:0;top:0;transform-origin:0 0;overflow:hidden;border-radius:5px;background:#f8fafc;color:#64748b; }
@@ -693,33 +729,37 @@
     <div id="world" class="world"><svg id="connectionLayer" class="connections" aria-hidden="true"></svg></div>
   </main>
 
-  <nav class="tool-rail" aria-label="Alat whiteboard">
+  <nav id="toolRail" class="tool-rail" aria-label="Alat whiteboard">
+    <button id="addCardTool" class="tool-button" type="button" aria-label="Tambah kartu" title="Tambah kartu New idea"></button>
     <button id="cursorTool" class="tool-button active" type="button" aria-label="Kursor" aria-pressed="true" title="Kursor">
       <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 3.8v15.5l4.2-4.1 2.7 5.1 2.5-1.3-2.7-5.1 5.8-.8L5 3.8Z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/></svg>
     </button>
     <button id="connectorTool" class="tool-button" type="button" aria-label="Koneksi" aria-pressed="false" title="Klik dua kartu untuk menghubungkan">
       <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="6" cy="12" r="3" stroke="currentColor" stroke-width="1.7"/><circle cx="18" cy="12" r="3" stroke="currentColor" stroke-width="1.7"/><path d="M9 12h6" stroke="currentColor" stroke-width="1.7"/></svg>
     </button>
+    <button id="pickerTool" class="tool-button" type="button" aria-label="Color picker" title="Color picker · Ctrl+Shift+E"></button>
+    <button id="handTool" class="tool-button" type="button" aria-label="Geser halaman" aria-pressed="false" title="Tangan · geser kanvas"></button>
   </nav>
 
   <header class="header-panel" aria-label="Navigasi file dan board">
     <div class="header-brand" aria-hidden="true"><div class="brand-mark">W</div><span>Whiteboard</span></div>
     <nav class="editor-menus" aria-label="Menu editor">
-      <div class="app-menu"><button class="menu-trigger" type="button" aria-haspopup="menu">File</button><div class="menu-popover" role="menu"><button id="openBoardsMenu" class="menu-command" type="button">Buka board <kbd>Ctrl+O</kbd></button><button id="newBoard" class="menu-command" type="button">Board baru <kbd>Ctrl+N</kbd></button><button id="renameBoardMenu" class="menu-command" type="button">Ubah nama</button><button id="saveBoard" class="menu-command" type="button">Simpan board <kbd>Ctrl+S</kbd></button><div class="menu-separator"></div><button id="importMedia" class="menu-command" type="button">Masukkan gambar</button><button id="exportBoard" class="menu-command" type="button">Ekspor JSON <kbd>Ctrl+E</kbd></button><button id="importBoard" class="menu-command" type="button">Impor ke board <kbd>Ctrl+I</kbd></button></div></div>
-      <div class="app-menu"><button class="menu-trigger" type="button" aria-haspopup="menu">Edit</button><div class="menu-popover" role="menu"><button id="undoMenu" class="menu-command" type="button">Urungkan <kbd>Ctrl+Z</kbd></button><button id="redoMenu" class="menu-command" type="button">Ulangi <kbd>Ctrl+Shift+Z</kbd></button><div class="menu-separator"></div><button id="duplicateMenu" class="menu-command" type="button">Duplikat <kbd>Ctrl+D</kbd></button><button id="groupMenu" class="menu-command" type="button">Group <kbd>G</kbd></button></div></div>
-      <div class="app-menu"><button class="menu-trigger" type="button" aria-haspopup="menu">Tampilan</button><div class="menu-popover" role="menu"><button id="fitMenu" class="menu-command" type="button">Tampilkan semua <kbd>Shift+P</kbd></button><button id="snapToggleMenu" class="menu-command" type="button"><span><span class="menu-check">✓</span> Snap presisi</span><kbd>Aktif</kbd></button><button id="shortcutMenu" class="menu-command" type="button">Panduan shortcut</button></div></div>
-      <div class="app-menu"><button class="menu-trigger" type="button" aria-haspopup="menu">Susun</button><div class="menu-popover" role="menu"><button id="frontMenu" class="menu-command" type="button">Ke paling atas <kbd>Ctrl+Shift+↑</kbd></button><button id="backMenu" class="menu-command" type="button">Ke paling bawah <kbd>Ctrl+Shift+↓</kbd></button><div class="menu-separator"></div><button id="alignLeftMenu" class="menu-command" type="button">Ratakan kiri <kbd>L</kbd></button><button id="alignTopMenu" class="menu-command" type="button">Ratakan atas <kbd>T</kbd></button></div></div>
+      <div class="app-menu"><button class="menu-trigger" type="button" aria-haspopup="menu">File</button><div class="menu-popover" role="menu"><button id="newBoard" class="menu-command" type="button">New board <kbd>Ctrl+N</kbd></button><button id="openBoardsMenu" class="menu-command" type="button">Open all boards <kbd>Ctrl+O</kbd></button><button id="openDeviceMenu" class="menu-command" type="button">Import board <kbd>Ctrl+Shift+O</kbd></button><button id="saveBoard" class="menu-command" type="button">Save board <kbd>Ctrl+S</kbd></button><button id="exportBoard" class="menu-command" type="button">Export board <kbd>Ctrl+E</kbd></button><button id="importBoard" class="menu-command" type="button">Import board <kbd>Ctrl+I</kbd></button><button id="closeBoardMenu" class="menu-command" type="button">Close board <kbd>Shift+W</kbd></button><button id="renameBoardMenu" class="menu-command" type="button">Rename board</button><button id="importMedia" class="menu-command" type="button">Import media</button></div></div>
+      <div class="app-menu"><button class="menu-trigger" type="button" aria-haspopup="menu">Edit</button><div class="menu-popover" role="menu"><button id="undoMenu" class="menu-command" type="button">Undo <kbd>Ctrl+Z</kbd></button><button id="redoMenu" class="menu-command" type="button">Redo <kbd>Ctrl+Y</kbd></button><button id="duplicateMenu" class="menu-command" type="button">Duplicate <kbd>Ctrl+D</kbd></button><button id="groupMenu" class="menu-command" type="button">Group <kbd>Ctrl+G</kbd></button><button id="ungroupMenu" class="menu-command" type="button">Ungroup <kbd>Ctrl+U</kbd></button><div class="menu-separator"></div><button id="cutMenu" class="menu-command" type="button">Cut <kbd>Ctrl+X</kbd></button><button id="copyMenu" class="menu-command" type="button">Copy <kbd>Ctrl+C</kbd></button><button id="pasteMenu" class="menu-command" type="button">Paste <kbd>Ctrl+V</kbd></button><button id="deleteMenu" class="menu-command" type="button">Delete <kbd>Delete</kbd></button><button id="selectAllMenu" class="menu-command" type="button">Select All <kbd>Ctrl+A</kbd></button></div></div>
+      <div class="app-menu"><button class="menu-trigger" type="button" aria-haspopup="menu">View</button><div class="menu-popover" role="menu"><button id="fitMenu" class="menu-command" type="button">Show All <kbd>Ctrl+Shift+A</kbd></button><button id="zoomInMenu" class="menu-command" type="button">Zoom in <kbd>Ctrl++</kbd></button><button id="zoomOutMenu" class="menu-command" type="button">Zoom out <kbd>Ctrl+−</kbd></button></div></div>
+      <div class="app-menu"><button class="menu-trigger" type="button" aria-haspopup="menu">Setting</button><div class="menu-popover" role="menu"><button id="animationMenu" class="menu-command" type="button"><span>Animation</span><kbd>Aktif</kbd></button><button id="snapToggleMenu" class="menu-command" type="button"><span><span class="menu-check">✓</span> Snap Precision</span><kbd>Aktif</kbd></button><button id="settingsButton" class="menu-command" type="button">Shortcut Guide <kbd>Modal</kbd></button></div></div>
+      <div class="app-menu"><button class="menu-trigger" type="button" aria-haspopup="menu">Tool</button><div class="menu-popover" role="menu"><button id="toggleToolbarMenu" class="menu-command" type="button">Toolbar <kbd>Aktif</kbd></button><button id="togglePaletteMenu" class="menu-command" type="button">Color Palette <kbd>Aktif</kbd></button><button id="toggleHistoryMenu" class="menu-command" type="button">Color History <kbd>Aktif</kbd></button><button id="toggleBoardStripMenu" class="menu-command" type="button">Board Strip <kbd>Aktif</kbd></button></div></div>
     </nav>
     <nav class="quick-actions" aria-label="Aksi cepat">
       <div class="quick-group" aria-label="Riwayat"><button id="quickUndo" class="quick-action" type="button" aria-label="Urungkan" title="Urungkan · Ctrl+Z"></button><button id="quickRedo" class="quick-action" type="button" aria-label="Ulangi" title="Ulangi · Ctrl+Shift+Z"></button></div>
-      <div class="quick-group" aria-label="Kartu"><button id="quickDuplicate" class="quick-action" type="button" aria-label="Duplikat" title="Duplikat · Ctrl+D"></button><button id="quickGroup" class="quick-action" type="button" aria-label="Group" title="Group · G"></button><button id="quickUngroup" class="quick-action" type="button" aria-label="Ungroup" title="Ungroup · U"></button><button id="quickDelete" class="quick-action" type="button" aria-label="Hapus" title="Hapus · Delete"></button></div>
-      <div class="quick-group" aria-label="Tampilan"><button id="quickFit" class="quick-action" type="button" aria-label="Tampilkan semua" title="Tampilkan semua · Shift+P"></button></div>
+      <div class="quick-group" aria-label="Clipboard"><button id="quickCut" class="quick-action" type="button" aria-label="Cut" title="Cut · Ctrl+X"></button><button id="quickCopy" class="quick-action" type="button" aria-label="Copy" title="Copy · Ctrl+C"></button><button id="quickPaste" class="quick-action" type="button" aria-label="Paste" title="Paste · Ctrl+V"></button><button id="quickDuplicate" class="quick-action" type="button" aria-label="Duplicate" title="Duplicate · Ctrl+D"></button><button id="quickRepeat" class="quick-action" type="button" aria-label="Repeat" title="Repeat · Ctrl+R"></button><button id="quickDelete" class="quick-action" type="button" aria-label="Delete" title="Delete"></button></div>
+      <div class="quick-group" aria-label="Kartu"><button id="quickGroup" class="quick-action" type="button" aria-label="Group" title="Group · Ctrl+G"></button><button id="quickUngroup" class="quick-action" type="button" aria-label="Ungroup" title="Ungroup · Ctrl+U"></button><button id="quickSelectAll" class="quick-action" type="button" aria-label="Select All" title="Select All · Ctrl+A"></button></div>
+      <div class="quick-group" aria-label="Tampilan"><button id="quickZoomIn" class="quick-action" type="button" aria-label="Zoom in" title="Zoom in · Ctrl++"></button><button id="quickZoomOut" class="quick-action" type="button" aria-label="Zoom out" title="Zoom out · Ctrl+−"></button><button id="quickFit" class="quick-action" type="button" aria-label="Show All" title="Show All · Ctrl+Shift+A"></button></div>
     </nav>
-    <button id="settingsButton" class="header-action" type="button" aria-label="Pengaturan dan shortcut" title="Pengaturan"><svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="1.6"/><path d="M19 13.5v-3l-2.1-.6a7 7 0 0 0-.7-1.7l1.1-1.9-2.1-2.1-1.9 1.1a7 7 0 0 0-1.7-.7L10.5 2h-3l-.6 2.1a7 7 0 0 0-1.7.7L3.3 3.7 1.2 5.8l1.1 1.9a7 7 0 0 0-.7 1.7L0 10.5v3l2.1.6a7 7 0 0 0 .7 1.7l-1.1 1.9 2.1 2.1 1.9-1.1a7 7 0 0 0 1.7.7l.6 2.1h3l.6-2.1a7 7 0 0 0 1.7-.7l1.9 1.1 2.1-2.1-1.1-1.9a7 7 0 0 0 .7-1.7L19 13.5Z" stroke="currentColor" stroke-width="1.2" transform="translate(2.5 .25) scale(.8)"/></svg></button>
     <strong id="activeBoardTitle" class="active-board-title">Board</strong>
     <select id="boardSelect" class="visually-hidden" aria-label="Pilih board"></select>
     <input id="boardName" class="visually-hidden" type="text" maxlength="48" aria-label="Nama board">
-    <input id="importFile" class="visually-hidden" type="file" accept="application/json,.json,image/*,video/*,audio/*,.txt,.md,.markdown,.csv,.log,.xml,.html,.css,.js,.ts,.py" tabindex="-1">
+    <input id="importFile" class="visually-hidden" type="file" accept="application/json,.json" tabindex="-1">
     <input id="mediaFile" class="visually-hidden" type="file" accept="image/*,video/mp4,video/webm,video/ogg,.mov,.m4v,audio/mpeg,audio/ogg,audio/wav,audio/mp4,audio/aac,audio/flac,audio/opus,.m4a,.flac,.opus,.txt,.md,.markdown,.csv,.log,.xml,.html,.css,.js,.ts,.py,image/svg+xml" tabindex="-1">
   </header>
 
@@ -736,9 +776,9 @@
     <span>Grup <strong id="groupInfo">—</strong></span>
     <div class="version-wrap">
       <button id="versionButton" class="version-button" type="button" aria-haspopup="dialog" aria-controls="versionModal" aria-expanded="false">
-        <span class="version-label">v0.9.0</span>
+        <span class="version-label">v1.0.0-beta</span>
       </button>
-      <div class="tooltip" role="tooltip"><strong>v0.9.0</strong><ul><li>Handle resize berukuran tetap</li><li>Aksi cepat berkelompok</li><li>Duplikasi drag diperketat</li></ul></div>
+      <div class="tooltip" role="tooltip"><strong>v1.0.0-beta</strong><ul><li>Alur tutup dan recent diperbarui</li><li>Duplikasi kartu dan board dikoreksi</li><li>Audit shortcut dan menu selesai</li></ul></div>
     </div>
   </footer>
 
@@ -780,7 +820,7 @@
     <button type="button" role="menuitem" data-board-action="rename">Ubah nama</button>
     <button type="button" role="menuitem" data-board-action="duplicate">Duplikat</button>
     <button type="button" role="menuitem" data-board-action="export">Ekspor JSON</button>
-    <button type="button" role="menuitem" data-board-action="delete">Hapus</button>
+    <button type="button" role="menuitem" data-board-action="delete">Hapus board tersimpan</button>
   </div>
   <div id="textFormatBar" class="text-format-bar" role="toolbar" aria-label="Format teks">
     <button type="button" data-format="bold" aria-label="Tebal">B</button><button type="button" data-format="italic" aria-label="Miring"><em>I</em></button><button type="button" data-format="underline" aria-label="Garis bawah"><u>U</u></button><span class="text-format-divider"></span><button type="button" data-format="justifyLeft" aria-label="Rata kiri">L</button><button type="button" data-format="justifyCenter" aria-label="Rata tengah">C</button><button type="button" data-format="justifyRight" aria-label="Rata kanan">R</button><span class="text-format-divider"></span><button type="button" data-format="smaller" aria-label="Perkecil teks">A−</button><button type="button" data-format="larger" aria-label="Perbesar teks">A+</button>
@@ -794,6 +834,22 @@
       <button id="closeVersionModal" class="close-button" type="button" aria-label="Tutup riwayat versi">×</button>
     </div>
     <details class="release" open>
+      <summary class="release-meta"><strong>v1.0.0-beta — stabilisasi alur inti</strong></summary>
+      <div class="change-list"><article class="change-group"><h3>Alur board</h3><ul><li>Shift+W menutup board aktif, meminta penyimpanan secara default, lalu membuka board berikutnya.</li><li>Shift+R membuka Recent Board. Tab board memperoleh tombol tutup terpisah.</li><li>Duplikasi board langsung disimpan dan ditempatkan di urutan recent teratas.</li></ul></article><article class="change-group"><h3>Interaksi</h3><ul><li>Duplicate kartu memakai offset kanan bawah tetap; Paste tetap mengikuti pointer.</li><li>Dropdown pengaturan tidak menutup setelah sakelar ditekan, ikon Copy dan Duplicate dibedakan, serta Repeat ditambahkan ke header.</li><li>Scroll bar Recent disembunyikan dan tombol aksi dikunci di bagian bawah.</li></ul></article></div>
+    </details>
+    <details class="release">
+      <summary class="release-meta"><strong>v0.9.3 — menu &amp; penutupan board</strong></summary>
+      <div class="change-list"><article class="change-group"><h3>Diperbaiki</h3><ul><li>Menu tiga titik kembali muncul ketika kartu board diarahkan atau difokuskan.</li><li>Dropdown header memakai teks, ikon, dan tinggi baris yang lebih kecil serta rata.</li></ul></article><article class="change-group"><h3>Alur</h3><ul><li>Ctrl+W kini menutup board aktif dan mencegah Chrome menutup tab.</li><li>Board dengan perubahan belum tersimpan menawarkan Simpan &amp; tutup, Buang perubahan, atau Batal.</li></ul></article></div>
+    </details>
+    <details class="release">
+      <summary class="release-meta"><strong>v0.9.2 — beranda &amp; penyimpanan</strong></summary>
+      <div class="change-list"><article class="change-group"><h3>Baru</h3><ul><li>Halaman awal khusus menampilkan tujuh recent board dalam grid empat kolom.</li><li>Open all boards memakai daftar nama dan pratinjau terpisah.</li><li>Ekspor menyediakan JSON yang dapat diimpor kembali atau tampilan PDF berukuran konten.</li></ul></article><article class="change-group"><h3>Alur</h3><ul><li>Sebelumnya perubahan langsung masuk IndexedDB. Sekarang hanya Save atau Ctrl+S yang menulis board dan memperbarui recent.</li><li>Ctrl+A kini memilih seluruh kartu; Ctrl+Shift+A menampilkan seluruh konten.</li><li>Header memakai pemisah sederhana dan latar hover tanpa border tombol.</li></ul></article></div>
+    </details>
+    <details class="release">
+      <summary class="release-meta"><strong>v0.9.1 — menu &amp; alat desktop</strong></summary>
+      <div class="change-list"><article class="change-group"><h3>Baru</h3><ul><li>Header memakai menu teks File, Edit, View, Setting, dan Tool.</li><li>Aksi cepat dikelompokkan menjadi riwayat, clipboard, group/seleksi, dan zoom.</li></ul></article><article class="change-group"><h3>Shortcut</h3><ul><li>Tool rail menyediakan tambah kartu, pointer, link, color picker, dan tangan.</li><li>Tool menu dapat menampilkan atau menyembunyikan Toolbar, Color Palette, Color History, dan Board Strip.</li></ul></article></div>
+    </details>
+    <details class="release">
       <summary class="release-meta"><strong>v0.9.0 — stabilisasi interaksi</strong></summary>
       <div class="change-list"><ul><li>Handle resize media mempertahankan ukuran antarmuka default meskipun kartu diperbesar atau diperkecil.</li><li>Header memperoleh kelompok ikon aksi cepat untuk undo/redo, duplikat, group/ungroup, hapus, dan tampilkan semua; tooltip menampilkan shortcut masing-masing.</li><li>Duplikasi klik-kanan hanya diproses ketika drag masih aktif. Seluruh state dan fungsi duplikasi setelah drag selesai telah dihapus.</li><li>Alur internal diringkas dengan menghapus fungsi legacy serta state paste/drag yang tidak lagi digunakan.</li></ul></div>
     </details>
@@ -924,19 +980,34 @@
 
   <div id="exportModal" class="modal-shell" role="dialog" aria-modal="true" aria-labelledby="exportTitle" aria-hidden="true">
     <div class="modal-panel" style="max-width:440px">
-      <div class="modal-head"><div><p class="eyebrow">Ekspor JSON</p><h2 id="exportTitle">Simpan salinan board</h2></div><button id="closeExportModal" class="close-button" type="button" aria-label="Tutup ekspor">×</button></div>
-      <p class="export-warning">File JSON memuat teks, gambar, posisi objek, koneksi, dan tampilan board aktif. Board dengan gambar dapat menghasilkan file yang besar. Simpan di lokasi aman jika catatan bersifat pribadi.</p>
+      <div class="modal-head"><div><p class="eyebrow">Ekspor board</p><h2 id="exportTitle">Simpan salinan board</h2></div><button id="closeExportModal" class="close-button" type="button" aria-label="Tutup ekspor">×</button></div>
+      <p class="export-warning">JSON mempertahankan data agar dapat diimpor kembali. PDF memakai ukuran halaman khusus yang mencakup seluruh konten dan mempertahankan warna, posisi, teks, serta garis.</p>
+      <div class="format-choice"><label><input type="radio" name="exportFormat" value="json" checked> JSON board</label><label><input type="radio" name="exportFormat" value="pdf"> PDF visual</label></div>
       <label class="export-field">Nama file<input id="exportName" type="text" maxlength="64" autocomplete="off"></label>
-      <div class="modal-actions"><button id="cancelExport" class="modal-action" type="button">Batal</button><button id="confirmExport" class="modal-action primary" type="button">Ekspor JSON</button></div>
+      <div class="modal-actions"><button id="cancelExport" class="modal-action" type="button">Batal</button><button id="confirmExport" class="modal-action primary" type="button">Ekspor</button></div>
     </div>
   </div>
 
   <div id="boardOverviewModal" class="modal-shell board-page" role="region" aria-labelledby="boardOverviewTitle" aria-hidden="true">
     <div class="modal-panel board-library-panel">
-      <div class="modal-head board-library-head"><div><p class="eyebrow">Ctrl + O</p><h2 id="boardOverviewTitle">Pilih board</h2></div><div class="board-library-actions"><button id="importBoardFromOverview" class="modal-action" type="button">Impor board</button><button id="closeBoardOverview" class="close-button" type="button" aria-label="Tutup daftar board">×</button></div></div>
-      <p class="board-picker-hint">Klik sekali untuk memilih. Klik dua kali untuk membuka. Tekan Delete untuk menghapus board terpilih.</p>
-      <div class="board-grid-wrap"><div id="boardOverviewGrid" class="board-grid"></div></div>
+      <div class="home-layout">
+        <nav class="home-nav" aria-label="Navigasi beranda"><button class="active" type="button">Recent board</button><button id="homeAllBoards" type="button">All boards</button></nav>
+        <section class="home-content"><h1 id="boardOverviewTitle" class="home-title">Recent board</h1><div class="board-grid-wrap"><div id="boardOverviewGrid" class="board-grid"></div></div><div class="home-actions"><button id="openAllBoardsHome" class="modal-action primary" type="button">Open all boards</button><button id="importBoardFromOverview" class="modal-action" type="button">Import board</button></div></section>
+      </div>
+      <button id="closeBoardOverview" type="button" hidden aria-hidden="true"></button>
     </div>
+  </div>
+
+  <div id="allBoardsModal" class="modal-shell" role="dialog" aria-modal="true" aria-labelledby="allBoardsTitle" aria-hidden="true">
+    <div class="modal-panel all-board-panel"><div class="modal-head all-board-head"><div><p class="eyebrow">Pustaka lokal</p><h2 id="allBoardsTitle">All boards</h2></div><button id="closeAllBoards" class="close-button" type="button" aria-label="Tutup">×</button></div><div class="all-board-split"><div id="allBoardsList" class="all-board-list"></div><div id="allBoardsPreview" class="all-board-preview"><div class="preview-empty">Pilih nama board untuk melihat pratinjau.</div></div></div></div>
+  </div>
+
+  <div id="newBoardModal" class="modal-shell" role="dialog" aria-modal="true" aria-labelledby="newBoardTitle" aria-hidden="true">
+    <div class="modal-panel new-board-panel"><div class="modal-head"><div><p class="eyebrow">Board baru</p><h2 id="newBoardTitle">Beri nama board</h2></div><button id="cancelNewBoardX" class="close-button" type="button" aria-label="Batal">×</button></div><label class="export-field">Nama board<input id="newBoardName" type="text" maxlength="48" autocomplete="off"></label><div class="modal-actions"><button id="cancelNewBoard" class="modal-action" type="button">Batal</button><button id="confirmNewBoard" class="modal-action primary" type="button">Buat board</button></div></div>
+  </div>
+
+  <div id="closeBoardWarningModal" class="modal-shell" role="dialog" aria-modal="true" aria-labelledby="closeBoardWarningTitle" aria-hidden="true">
+    <div class="modal-panel" style="max-width:460px"><div class="modal-head"><div><p class="eyebrow">Tutup board</p><h2 id="closeBoardWarningTitle">Simpan sebelum menutup board?</h2></div></div><p id="closeBoardWarningText" class="export-warning">Secara default board akan disimpan, lalu board berikutnya dibuka.</p><div class="modal-actions"><button id="cancelCloseBoard" class="modal-action" type="button">Batal</button><button id="discardCloseBoard" class="modal-action" type="button">Buang perubahan</button><button id="saveCloseBoard" class="modal-action primary" type="button">Simpan &amp; tutup</button></div></div>
   </div>
 
   <div id="settingsModal" class="modal-shell" role="dialog" aria-modal="true" aria-labelledby="settingsTitle" aria-hidden="true">
@@ -944,7 +1015,7 @@
       <div class="modal-head"><div><p class="eyebrow">Pengaturan</p><h2 id="settingsTitle">Panduan shortcut</h2></div><button id="closeSettings" class="close-button" type="button" aria-label="Tutup pengaturan">×</button></div>
       <div class="setting-row"><div><strong>Animasi drag</strong><span>Memberi efek angkat halus saat kartu digeser.</span></div><label class="switch"><input id="dragMotionToggle" type="checkbox"><span class="switch-track"></span></label></div>
       <dl class="shortcut-list"><dt>Buat / hapus link internal seleksi</dt><dd>Shift + L</dd><dt>Board sebelumnya / berikutnya</dt><dd>Ctrl + Alt + ← / →</dd>
-        <dt>Buka daftar board</dt><dd>Ctrl + O</dd><dt>Ambil warna kartu aktif</dt><dd>Ctrl + Shift + E</dd><dt>Konfirmasi editor</dt><dd>Enter / Ctrl + Space</dd><dt>Simpan board</dt><dd>Ctrl + S</dd><dt>Tampilkan seluruh kartu</dt><dd>Shift + P</dd><dt>Ekspor / Impor</dt><dd>Ctrl + E / Ctrl + I</dd><dt>Undo / Redo kartu</dt><dd>Ctrl + Z / Ctrl + Shift + Z</dd><dt>Ulangi aktivitas</dt><dd>Ctrl + R</dd><dt>Ganti kursor / garis</dt><dd>Space</dd><dt>Group / Ungroup</dt><dd>G / U</dd><dt>Pilih semua</dt><dd>Ctrl + A</dd><dt>Tempel kartu / screenshot / teks</dt><dd>Ctrl + V</dd><dt>Duplikat</dt><dd>Ctrl + D</dd><dt>Ratakan ke kartu acuan</dt><dd>T / B / L / R / C / E</dd><dt>Hapus kartu / garis</dt><dd>Delete</dd>
+        <dt>Board baru / open all boards</dt><dd>Ctrl + N / Ctrl + O</dd><dt>Recent board</dt><dd>Shift + R</dd><dt>Impor board dari perangkat</dt><dd>Ctrl + Shift + O</dd><dt>Tutup board aktif</dt><dd>Shift + W</dd><dt>Ambil warna kartu aktif</dt><dd>Ctrl + Shift + E</dd><dt>Konfirmasi editor</dt><dd>Enter / Ctrl + Space</dd><dt>Simpan board</dt><dd>Ctrl + S</dd><dt>Select All / Show All</dt><dd>Ctrl + A / Ctrl + Shift + A</dd><dt>Zoom pada pointer</dt><dd>Ctrl + + / Ctrl + −</dd><dt>Ekspor / Impor</dt><dd>Ctrl + E / Ctrl + I</dd><dt>Undo / Redo</dt><dd>Ctrl + Z / Ctrl + Y</dd><dt>Ulangi aktivitas</dt><dd>Ctrl + R</dd><dt>Ganti kursor / garis</dt><dd>Space</dd><dt>Group / Ungroup</dt><dd>Ctrl + G / Ctrl + U</dd><dt>Cut / Copy / Paste</dt><dd>Ctrl + X / Ctrl + C / Ctrl + V</dd><dt>Duplikat / Hapus kartu</dt><dd>Ctrl + D / Delete</dd><dt>Ratakan kartu</dt><dd>T / B / L / R / C / E</dd>
       </dl>
     </div>
   </div>
@@ -979,6 +1050,14 @@
       const boardOverviewModal = document.getElementById('boardOverviewModal');
       const closeBoardOverviewButton = document.getElementById('closeBoardOverview');
       const boardOverviewGrid = document.getElementById('boardOverviewGrid');
+      const allBoardsModal = document.getElementById('allBoardsModal');
+      const allBoardsList = document.getElementById('allBoardsList');
+      const allBoardsPreview = document.getElementById('allBoardsPreview');
+      const closeAllBoardsButton = document.getElementById('closeAllBoards');
+      const newBoardModal = document.getElementById('newBoardModal');
+      const newBoardName = document.getElementById('newBoardName');
+      const confirmNewBoard = document.getElementById('confirmNewBoard');
+      const closeBoardWarningModal = document.getElementById('closeBoardWarningModal');
       const settingsButton = document.getElementById('settingsButton');
       const settingsModal = document.getElementById('settingsModal');
       const closeSettingsButton = document.getElementById('closeSettings');
@@ -989,6 +1068,10 @@
       const groupInfo = document.getElementById('groupInfo');
       const cursorTool = document.getElementById('cursorTool');
       const connectorTool = document.getElementById('connectorTool');
+      const addCardTool = document.getElementById('addCardTool');
+      const pickerTool = document.getElementById('pickerTool');
+      const handTool = document.getElementById('handTool');
+      const toolRail = document.getElementById('toolRail');
       const contextMenu = document.getElementById('contextMenu');
       const boardCardMenu = document.getElementById('boardCardMenu');
       const textFormatBar = document.getElementById('textFormatBar');
@@ -1025,6 +1108,7 @@
 
       let camera = { x: 0, y: 0, scale: 1 };
       let boards = [];
+      let recentIds = [];
       let currentBoardId = null;
       let cards = [];
       let connections = [];
@@ -1054,12 +1138,16 @@
       let resize = null;
       let overviewSelectedBoardId = null;
       let boardMenuTargetId = null;
-      let importMode = 'merge';
+      let importMode = 'board-list';
       let dbPromise = null;
       let lastPointer = { x: window.innerWidth / 2, y: window.innerHeight / 2 };
       let dragMotionEnabled = localStorage.getItem(MOTION_STORAGE_KEY) !== 'false';
       let dirty = false;
       let saveToastTimer = 0;
+      let persistedStateSnapshot = '';
+      const closedBoardIds = new Set();
+      let pendingCloseBoardId = null;
+      let pendingNextBoardId = null;
 
       function scheduleMotionRender() {
         if (motionFrame) return;
@@ -1084,6 +1172,7 @@
       function updateMotionSetting() {
         document.body.classList.toggle('motion-enabled', dragMotionEnabled);
         dragMotionToggle.checked = dragMotionEnabled;
+        document.getElementById('animationMenu')?.querySelector('kbd') && (document.getElementById('animationMenu').querySelector('kbd').textContent = dragMotionEnabled ? 'Aktif' : 'Nonaktif');
       }
 
       function escapeText(value) {
@@ -1112,6 +1201,8 @@
         download: '<path d="M12 3v12m0 0 4-4m-4 4-4-4M5 19h14"/>', upload: '<path d="M12 16V4m0 0 4 4m-4-4L8 8M5 20h14"/>',
         undo: '<path d="m9 7-5 5 5 5"/><path d="M4 12h9a7 7 0 0 1 7 7"/>', redo: '<path d="m15 7 5 5-5 5"/><path d="M20 12h-9a7 7 0 0 0-7 7"/>',
         copy: '<rect x="8" y="8" width="12" height="12" rx="2"/><path d="M16 8V5a1 1 0 0 0-1-1H5a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h3"/>',
+        duplicate: '<rect x="4" y="7" width="11" height="11" rx="2"/><rect x="9" y="3" width="11" height="11" rx="2"/><path d="M14.5 6v5M12 8.5h5"/>',
+        repeat: '<path d="M17 2l4 4-4 4"/><path d="M3 11V9a3 3 0 0 1 3-3h15M7 22l-4-4 4-4"/><path d="M21 13v2a3 3 0 0 1-3 3H3"/>',
         group: '<rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="8.5" y="14" width="7" height="7" rx="1"/>',
         ungroup: '<rect x="3" y="4" width="7" height="7" rx="1"/><rect x="14" y="13" width="7" height="7" rx="1"/><path d="M10 7h4m-2-2 2 2-2 2M14 17h-4m2-2-2 2 2 2"/>',
         trash: '<path d="M4 7h16M9 7V4h6v3M7 7l1 14h8l1-14M10 11v6M14 11v6"/>',
@@ -1120,6 +1211,13 @@
         front: '<rect x="8" y="8" width="11" height="11" rx="2"/><path d="M16 8V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h3"/>', back: '<rect x="5" y="5" width="11" height="11" rx="2"/><path d="M8 16v3a2 2 0 0 0 2 2h9a2 2 0 0 0 2-2v-9a2 2 0 0 0-2-2h-3"/>',
         alignLeft: '<path d="M4 4v16M8 7h10M8 12h7M8 17h10"/>', alignTop: '<path d="M4 4h16M7 8v10M12 8v7M17 8v10"/>',
         pointer: '<path d="m5 3 14 9-7 2-3 7Z"/>', link: '<path d="M10 13a5 5 0 0 0 7.5.5l2-2a5 5 0 0 0-7-7l-1.1 1.1"/><path d="M14 11a5 5 0 0 0-7.5-.5l-2 2a5 5 0 0 0 7 7l1.1-1.1"/>',
+        hand: '<path d="M7 11V7a2 2 0 0 1 4 0v3-5a2 2 0 0 1 4 0v5-3a2 2 0 0 1 4 0v7c0 5-3 8-8 8-3 0-5-2-7-5l-2-3a2 2 0 0 1 3-2l2 2"/>',
+        eyedropper: '<path d="m19 3 2 2-9.5 9.5-3-3Z"/><path d="m9 13-5 5v2h2l5-5"/>',
+        scissors: '<circle cx="6" cy="7" r="3"/><circle cx="6" cy="17" r="3"/><path d="m8.5 8.5 11 7M8.5 15.5l11-7"/>',
+        clipboard: '<rect x="5" y="4" width="14" height="17" rx="2"/><path d="M9 4V2h6v2M9 9h6M9 13h6"/>',
+        zoomIn: '<circle cx="10.5" cy="10.5" r="6.5"/><path d="m15.5 15.5 5 5M10.5 7.5v6M7.5 10.5h6"/>',
+        zoomOut: '<circle cx="10.5" cy="10.5" r="6.5"/><path d="m15.5 15.5 5 5M7.5 10.5h6"/>',
+        selectAll: '<path d="M4 8V4h4M16 4h4v4M20 16v4h-4M8 20H4v-4"/><rect x="8" y="8" width="8" height="8" rx="1"/>',
         settings: '<path d="M12 15.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7Z"/><path d="M19.4 15a1.7 1.7 0 0 0 .34 1.88l.06.06-2.83 2.83-.06-.06a1.7 1.7 0 0 0-1.88-.34 1.7 1.7 0 0 0-1.03 1.56V21h-4v-.08A1.7 1.7 0 0 0 9 19.37a1.7 1.7 0 0 0-1.88.34l-.06.06-2.83-2.83.06-.06A1.7 1.7 0 0 0 4.63 15 1.7 1.7 0 0 0 3.08 14H3v-4h.08A1.7 1.7 0 0 0 4.63 9a1.7 1.7 0 0 0-.34-1.88l-.06-.06 2.83-2.83.06.06A1.7 1.7 0 0 0 9 4.63 1.7 1.7 0 0 0 10 3.08V3h4v.08A1.7 1.7 0 0 0 15 4.63a1.7 1.7 0 0 0 1.88-.34l.06-.06 2.83 2.83-.06.06A1.7 1.7 0 0 0 19.37 9 1.7 1.7 0 0 0 20.92 10H21v4h-.08A1.7 1.7 0 0 0 19.4 15Z"/>',
         x: '<path d="M18 6 6 18M6 6l12 12"/>', save: '<path d="M5 3h12l2 2v16H5Z"/><path d="M8 3v6h8V3M8 21v-7h8v7"/>',
         more: '<circle cx="12" cy="5" r="1" fill="currentColor" stroke="none"/><circle cx="12" cy="12" r="1" fill="currentColor" stroke="none"/><circle cx="12" cy="19" r="1" fill="currentColor" stroke="none"/>'
@@ -1134,16 +1232,16 @@
       }
 
       function installMenuIcons() {
-        const icons = { openBoardsMenu:'folder', newBoard:'plus', renameBoardMenu:'pencil', saveBoard:'save', importMedia:'image', exportBoard:'download', importBoard:'upload', undoMenu:'undo', redoMenu:'redo', duplicateMenu:'copy', groupMenu:'group', fitMenu:'scan', snapToggleMenu:'magnet', shortcutMenu:'keyboard', frontMenu:'front', backMenu:'back', alignLeftMenu:'alignLeft', alignTopMenu:'alignTop' };
+        const icons = { openBoardsMenu:'folder', newBoard:'plus', renameBoardMenu:'pencil', saveBoard:'save', importMedia:'image', exportBoard:'download', importBoard:'upload', openDeviceMenu:'folder', closeBoardMenu:'x', undoMenu:'undo', redoMenu:'redo', duplicateMenu:'duplicate', groupMenu:'group', ungroupMenu:'ungroup', cutMenu:'scissors', copyMenu:'copy', pasteMenu:'clipboard', deleteMenu:'trash', selectAllMenu:'selectAll', fitMenu:'scan', zoomInMenu:'zoomIn', zoomOutMenu:'zoomOut', animationMenu:'settings', snapToggleMenu:'magnet', settingsButton:'keyboard', toggleToolbarMenu:'pointer', togglePaletteMenu:'eyedropper', toggleHistoryMenu:'clipboard', toggleBoardStripMenu:'folder' };
         Object.entries(icons).forEach(([id, name]) => document.getElementById(id)?.prepend(lucideIcon(name)));
+        addCardTool.replaceChildren(lucideIcon('plus'));
         cursorTool.replaceChildren(lucideIcon('pointer'));
         connectorTool.replaceChildren(lucideIcon('link'));
-        settingsButton.replaceChildren(lucideIcon('settings'));
+        pickerTool.replaceChildren(lucideIcon('eyedropper'));
+        handTool.replaceChildren(lucideIcon('hand'));
         document.querySelectorAll('.close-button').forEach(button => button.replaceChildren(lucideIcon('x')));
         document.querySelector('.drop-icon')?.replaceChildren(lucideIcon('upload'));
-        const headerMenus = [['File','folder'],['Edit','pencil'],['Tampilan','scan'],['Susun','group']];
-        document.querySelectorAll('.menu-trigger').forEach((trigger, index) => { const [label, icon] = headerMenus[index] || ['Menu','more']; trigger.setAttribute('aria-label', label); trigger.title = label; trigger.replaceChildren(lucideIcon(icon)); });
-        const quickIcons={quickUndo:'undo',quickRedo:'redo',quickDuplicate:'copy',quickGroup:'group',quickUngroup:'ungroup',quickDelete:'trash',quickFit:'scan'};
+        const quickIcons={quickUndo:'undo',quickRedo:'redo',quickCut:'scissors',quickCopy:'copy',quickPaste:'clipboard',quickDuplicate:'duplicate',quickRepeat:'repeat',quickDelete:'trash',quickGroup:'group',quickUngroup:'ungroup',quickSelectAll:'selectAll',quickZoomIn:'zoomIn',quickZoomOut:'zoomOut',quickFit:'scan'};
         Object.entries(quickIcons).forEach(([id,name])=>document.getElementById(id)?.replaceChildren(lucideIcon(name)));
       }
 
@@ -1163,7 +1261,7 @@
       }
 
       function createBoard(name = 'Board baru', initialCards = [], initialConnections = []) {
-        return { id: makeId('board'), name, cards: initialCards, connections: initialConnections, camera: { x: 0, y: 0, scale: 1 } };
+        return { id: makeId('board'), name, cards: initialCards, connections: initialConnections, camera: { x: 0, y: 0, scale: 1 }, savedAt: null };
       }
 
       function currentBoard() {
@@ -1180,7 +1278,8 @@
 
       function serializeState() {
         syncCurrentBoard();
-        return JSON.stringify({ version: 2, currentBoardId, boards });
+        const persistedBoards = boards.filter(board => board.savedAt);
+        return JSON.stringify({ version: 4, currentBoardId: persistedBoards.some(board => board.id === currentBoardId) ? currentBoardId : persistedBoards[0]?.id || null, recentIds: recentIds.filter(id => persistedBoards.some(board => board.id === id)).slice(0, 7), boards: persistedBoards });
       }
 
       function serializeHistoryState() {
@@ -1246,11 +1345,15 @@
           const saved = JSON.parse(indexed || localStorage.getItem(STORAGE_KEY));
           if (saved && Array.isArray(saved.boards)) {
             boards = saved.boards;
+            boards.forEach((board, index) => { if (!board.savedAt) board.savedAt = Date.now() - index; });
+            recentIds = Array.isArray(saved.recentIds) ? saved.recentIds.filter(id => boards.some(board => board.id === id)).slice(0, 7) : boards.slice(0, 7).map(board => board.id);
             currentBoardId = saved.currentBoardId || boards[0]?.id || null;
           } else {
             const legacy = JSON.parse(localStorage.getItem(LEGACY_STORAGE_KEY));
             const legacyCards = legacy && Array.isArray(legacy.cards) ? legacy.cards : [];
             boards = legacyCards.length ? [createBoard('Board 1', legacyCards, [])] : [];
+            boards.forEach(board => { board.savedAt = Date.now(); });
+            recentIds = boards.map(board => board.id);
             currentBoardId = boards[0]?.id || null;
           }
         } catch (_) {
@@ -1258,12 +1361,11 @@
         }
         loadCurrentBoard();
         lastSnapshot = serializeHistoryState();
-        const migrated = await writeStoredState(serializeState());
-        if (migrated) localStorage.removeItem(STORAGE_KEY);
+        persistedStateSnapshot = serializeState();
       }
 
       function saveState(recordHistory = true) {
-        const snapshot = serializeState();
+        syncCurrentBoard();
         const historySnapshot = serializeHistoryState();
         const changed = Boolean(lastSnapshot && historySnapshot !== lastSnapshot);
         if (recordHistory && changed) {
@@ -1272,7 +1374,6 @@
           redoStack = [];
         }
         if (recordHistory && changed) dirty = true;
-        writeStoredState(snapshot);
         lastSnapshot = historySnapshot;
         updateStatus();
         updateBoardControls();
@@ -1280,15 +1381,34 @@
 
       async function saveBoardNow() {
         finishEdit(true);
+        const board = currentBoard();
+        if (!board) return false;
+        board.savedAt = Date.now();
+        recentIds = [board.id, ...recentIds.filter(id => id !== board.id && boards.some(item => item.id === id && item.savedAt))].slice(0, 7);
         const succeeded = await writeStoredState(serializeState());
         if (!succeeded) {
           window.alert('Board belum dapat disimpan. Periksa ruang penyimpanan browser lalu coba lagi.');
-          return;
+          return false;
         }
+        persistedStateSnapshot = serializeState();
         dirty = false;
         activeBoardTitle.textContent = `${currentBoard()?.name || 'Board'} · tersimpan`;
         showSaveToast();
         window.setTimeout(updateBoardControls, 1100);
+        return true;
+      }
+
+      function restorePersistedState() {
+        if (!persistedStateSnapshot) return;
+        try {
+          const state = JSON.parse(persistedStateSnapshot);
+          boards = Array.isArray(state.boards) ? state.boards : [];
+          recentIds = Array.isArray(state.recentIds) ? state.recentIds.slice(0, 7) : [];
+          currentBoardId = state.currentBoardId || boards[0]?.id || null;
+          loadCurrentBoard();
+          undoStack = []; redoStack = []; dirty = false;
+          lastSnapshot = serializeHistoryState();
+        } catch (_) {}
       }
 
       function showSaveToast() {
@@ -1313,7 +1433,6 @@
         selectedConnectionId = null;
         lastSnapshot = snapshot;
         dirty = true;
-        writeStoredState(serializeState());
         renderAll();
       }
 
@@ -1381,6 +1500,17 @@
         camera.x = clientX - before.x * newScale;
         camera.y = clientY - before.y * newScale;
         updateCamera();
+      }
+
+      function zoomFromPointer(direction) {
+        const factor=direction==='in'?1.2:1/1.2;
+        zoomAt(lastPointer.x,lastPointer.y,factor);
+        const feedback=document.createElement('div');feedback.className='cursor-feedback';feedback.style.left=`${lastPointer.x}px`;feedback.style.top=`${lastPointer.y}px`;feedback.append(lucideIcon(direction==='in'?'zoomIn':'zoomOut'));document.body.append(feedback);setTimeout(()=>feedback.remove(),450);
+      }
+
+      function toggleSurface(element,menu) {
+        element.classList.toggle('surface-hidden');
+        menu.querySelector('kbd').textContent=element.classList.contains('surface-hidden')?'Nonaktif':'Aktif';
       }
 
       function fitAllCards() {
@@ -1500,6 +1630,7 @@
           el.classList.toggle('group-active', groupIsFullySelected && selectedIds.has(id));
           el.classList.toggle('connect-source', pendingConnectionId === id);
         });
+        pickerTool.disabled = selectedIds.size !== 1;
         updateStatus();
         updateMultiSelectionFrame();
       }
@@ -1528,9 +1659,11 @@
         selectedConnectionId = null;
         cursorTool.classList.toggle('active', tool === 'cursor');
         connectorTool.classList.toggle('active', tool === 'connector');
+        handTool.classList.toggle('active', tool === 'hand');
         cursorTool.setAttribute('aria-pressed', String(tool === 'cursor'));
         connectorTool.setAttribute('aria-pressed', String(tool === 'connector'));
-        viewport.style.cursor = tool === 'connector' ? 'crosshair' : '';
+        handTool.setAttribute('aria-pressed', String(tool === 'hand'));
+        viewport.style.cursor = tool === 'connector' ? 'crosshair' : tool === 'hand' ? 'grab' : '';
         syncSelection();
       }
 
@@ -1771,15 +1904,21 @@
         }
       }
 
-      function createCard(clientX, clientY) {
+      function createCard(clientX, clientY, initialText = '', openEditor = true) {
         if (!currentBoard()) return openBoardOverview();
         finishEdit(true);
         const point = screenToWorld(clientX, clientY);
-        const card = { id: nextId++, x: point.x - 56, y: point.y - 24, text: '', color: '#3978f6', textColor: '#ffffff' };
+        const card = { id: nextId++, x: point.x - 56, y: point.y - 24, text: initialText, color: '#3978f6', textColor: '#ffffff' };
         cards.push(card);
         renderCard(card);
         setSelected(card.id);
-        beginEdit(card.id);
+        if (openEditor) beginEdit(card.id); else saveState();
+      }
+
+      function openColorPicker() {
+        if (selectedIds.size !== 1) return;
+        if (!window.EyeDropper) { window.alert('Color picker belum tersedia di browser ini.'); return; }
+        new EyeDropper().open().then(({sRGBHex})=>{ if(selectedIds.size===1){applyColorToSelection(sRGBHex,'card');rememberColor(sRGBHex);} }).catch(()=>{});
       }
 
       function sanitizeRichHtml(html) {
@@ -2011,6 +2150,7 @@
 
       function startDrag(event) {
         if (event.target.closest('button, audio, video, input, progress')) return;
+        if (activeTool === 'hand') return;
         if (event.button !== 0 || editingId !== null) return;
         const el = event.currentTarget;
         const id = Number(el.dataset.id);
@@ -2148,7 +2288,7 @@
         world.style.transform = '';
         multiSelectionFrame.style.transform = '';
         updateCamera();
-        viewport.style.cursor = '';
+        viewport.style.cursor = activeTool === 'hand' ? 'grab' : activeTool === 'connector' ? 'crosshair' : '';
         window.removeEventListener('pointermove', movePan);
         window.removeEventListener('pointerup', endPan);
         window.removeEventListener('pointercancel', endPan);
@@ -2293,15 +2433,28 @@
         lastCardAction = { type: 'paste' };
       }
 
+      async function pasteFromClipboard() {
+        try {
+          if (!navigator.clipboard?.read) return pasteCards();
+          if (!window.confirm('Browser akan meminta izin membaca clipboard. Lanjutkan paste?')) return;
+          const items=await navigator.clipboard.read();
+          for(const item of items){
+            if(item.types.includes('text/html')){const html=await (await item.getType('text/html')).text();if(clipboardData?.cards?.length&&html.includes(`whiteboard:${internalClipboardToken}`))return pasteCards();}
+            const imageType=item.types.find(type=>type.startsWith('image/'));if(imageType){const blob=await item.getType(imageType);return importMediaFile(new File([blob],`clipboard.${imageType.split('/')[1]||'png'}`,{type:imageType}),lastPointer.x,lastPointer.y);}
+            if(item.types.includes('text/plain')){const text=(await (await item.getType('text/plain')).text()).trim();if(text)return createPastedTextCard(text,lastPointer.x,lastPointer.y,'');}
+          }
+          pasteCards();
+        } catch { pasteCards(); }
+      }
+
       function cutSelectedCards() {
         if (copySelectedCards()) deleteSelectedCards();
       }
 
       function duplicateSelectedCards() {
-        if (copySelectedCards(false)) {
-          pasteCards();
-          lastCardAction = { type: 'duplicate' };
-        }
+        if (!selectedIds.size) return;
+        duplicateSelectionAtOffset(24, 24);
+        lastCardAction = { type: 'duplicateMove', dx: 24, dy: 24 };
       }
 
       function duplicateSelectionAtOffset(dx, dy) {
@@ -2368,24 +2521,37 @@
 
       function switchBoard(id) {
         if (id === currentBoardId || !boards.some(board => board.id === id)) return;
+        if (dirty) {
+          if (!window.confirm('Perubahan board aktif belum disimpan dan akan hilang. Tetap beralih?')) return false;
+          discardCurrentDraft();
+          if (!boards.some(board => board.id === id)) return false;
+        }
         finishEdit(true);
         syncCurrentBoard();
         boardHistories.set(currentBoardId,{undo:[...undoStack],redo:[...redoStack]});
         currentBoardId = id;
+        closedBoardIds.delete(id);
         loadCurrentBoard();
         const history=boardHistories.get(id);
         undoStack = history?.undo || [];
         redoStack = history?.redo || [];
         lastCardAction=null;
-        saveState(false);
+        dirty = false;
+        lastSnapshot = serializeHistoryState();
         renderAll();
+        document.body.classList.remove('home-mode');
+        return true;
       }
 
-      function addBoard() {
+      function addBoard(name) {
+        if (dirty) {
+          if (!window.confirm('Perubahan board aktif belum disimpan dan akan hilang. Buat board baru?')) return null;
+          discardCurrentDraft();
+        }
         finishEdit(true);
         syncCurrentBoard();
         boardHistories.set(currentBoardId,{undo:[...undoStack],redo:[...redoStack]});
-        const board = createBoard(`Board ${boards.length + 1}`);
+        const board = createBoard(name || `Unnamed board ${boards.length + 1}`);
         boards.push(board);
         currentBoardId = board.id;
         loadCurrentBoard();
@@ -2395,6 +2561,50 @@
         dirty = true;
         saveState(false);
         renderAll();
+        document.body.classList.remove('home-mode');
+        return board;
+      }
+
+      function nextUnnamedBoardName() {
+        let index = 1;
+        const names = new Set(boards.map(board => board.name));
+        while (names.has(`Unnamed board ${index}`)) index += 1;
+        return `Unnamed board ${index}`;
+      }
+
+      function requestNewBoard() {
+        newBoardName.value = nextUnnamedBoardName();
+        newBoardModal.classList.add('open');
+        newBoardModal.setAttribute('aria-hidden', 'false');
+        updateScrim();
+        requestAnimationFrame(() => { newBoardName.focus(); newBoardName.select(); });
+      }
+
+      function closeNewBoardDialog() {
+        newBoardModal.classList.remove('open');
+        newBoardModal.setAttribute('aria-hidden', 'true');
+        updateScrim();
+      }
+
+      function confirmNewBoardCreation() {
+        const board = addBoard(newBoardName.value.trim() || nextUnnamedBoardName());
+        if (!board) return;
+        closeNewBoardDialog();
+        closeBoardOverview(true);
+      }
+
+      function discardCurrentDraft() {
+        if (!currentBoardId || !persistedStateSnapshot) return;
+        try {
+          const state = JSON.parse(persistedStateSnapshot);
+          const stored = state.boards?.find(board => board.id === currentBoardId);
+          const index = boards.findIndex(board => board.id === currentBoardId);
+          if (stored && index >= 0) boards[index] = stored;
+          else if (!stored && index >= 0) boards.splice(index, 1);
+          dirty = false;
+          loadCurrentBoard();
+          lastSnapshot = serializeHistoryState();
+        } catch (_) {}
       }
 
       function renameCurrentBoard() {
@@ -2437,6 +2647,31 @@
         setTimeout(() => URL.revokeObjectURL(url), 0);
       }
 
+      function exportBoardPdf(board, requestedName) {
+        const items = board.cards || [];
+        if (!items.length) return window.alert('Board kosong belum memiliki konten untuk diekspor ke PDF.');
+        const padding = 48;
+        const minX = Math.min(...items.map(card => Number(card.x) || 0));
+        const minY = Math.min(...items.map(card => Number(card.y) || 0));
+        const maxX = Math.max(...items.map(card => (Number(card.x) || 0) + (Number(card.width) || 120) * (Number(card.scale) || 1)));
+        const maxY = Math.max(...items.map(card => (Number(card.y) || 0) + (Number(card.height) || 50) * (Number(card.scale) || 1)));
+        const width = Math.ceil(maxX - minX + padding * 2), height = Math.ceil(maxY - minY + padding * 2);
+        const esc = value => String(value ?? '').replace(/[&<>"']/g, char => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
+        const cardsHtml = items.map(card => {
+          const scale = Number(card.scale) || 1, x = (Number(card.x)||0)-minX+padding, y=(Number(card.y)||0)-minY+padding;
+          const w=(Number(card.width)||120)*scale, h=(Number(card.height)||50)*scale;
+          if (card.type === 'image' || card.type === 'svg') return `<div class="pdf-card media" style="left:${x}px;top:${y}px;width:${w}px;height:${h}px"><img src="${esc(card.data)}"></div>`;
+          if (card.type) return `<div class="pdf-card file" style="left:${x}px;top:${y}px;width:${w}px;height:${h}px">${esc(card.name || card.type)}</div>`;
+          return `<div class="pdf-card" style="left:${x}px;top:${y}px;width:${w}px;min-height:${h}px;background:${card.color==='transparent'?'transparent':esc(card.color||'#3978f6')};color:${esc(card.textColor||'#fff')};font-size:${Math.max(7,12*scale)}px">${card.richText ? sanitizeRichHtml(card.html||'') : esc(card.text).replace(/\n/g,'<br>')}</div>`;
+        }).join('');
+        const lines = (board.connections || []).map(line => { const a=items.find(card=>card.id===line.from), b=items.find(card=>card.id===line.to); if(!a||!b)return ''; const ax=(a.x-minX+padding)+(a.width||120)*(a.scale||1)/2, ay=(a.y-minY+padding)+(a.height||50)*(a.scale||1)/2, bx=(b.x-minX+padding)+(b.width||120)*(b.scale||1)/2, by=(b.y-minY+padding)+(b.height||50)*(b.scale||1)/2; return `<line x1="${ax}" y1="${ay}" x2="${bx}" y2="${by}"/><text x="${(ax+bx)/2}" y="${(ay+by)/2-5}">${esc(line.label||'')}</text>`; }).join('');
+        const printWindow = window.open('', '_blank');
+        if (!printWindow) return window.alert('Izinkan pop-up untuk mengekspor PDF.');
+        printWindow.opener = null;
+        printWindow.document.write(`<!doctype html><html><head><title>${esc(requestedName||board.name)}</title><style>@page{size:${width}px ${height}px;margin:0}*{box-sizing:border-box}html,body{margin:0;width:${width}px;height:${height}px;overflow:hidden;font-family:Arial,sans-serif}.sheet{position:relative;width:100%;height:100%;background:#fff}.links{position:absolute;inset:0;width:100%;height:100%}.links line{stroke:#76a4ff;stroke-width:2}.links text{fill:#245dc9;font-size:10px;text-anchor:middle}.pdf-card{position:absolute;z-index:2;display:flex;align-items:center;justify-content:center;padding:10px;border:1px solid rgba(255,255,255,.8);border-radius:6px;text-align:center;overflow:hidden;box-shadow:0 2px 7px rgba(30,41,59,.12)}.media{padding:0;background:#fff}.media img{width:100%;height:100%;object-fit:contain}.file{background:#f1f5f9;color:#334155}</style></head><body><main class="sheet"><svg class="links">${lines}</svg>${cardsHtml}</main><script>onload=()=>setTimeout(()=>print(),250)<\/script></body></html>`);
+        printWindow.document.close();
+      }
+
       function normalizeImportedBoard(source, startId) {
         if (!source || !Array.isArray(source.cards)) throw new Error('Format board tidak valid');
         let idCursor = startId;
@@ -2459,6 +2694,10 @@
       async function importBoardFile(file, mode = importMode) {
         if (!file) return;
         try {
+          if (mode === 'board-list' && dirty) {
+            if (!window.confirm('Perubahan board aktif belum disimpan dan akan hilang. Tetap impor board?')) return;
+            discardCurrentDraft();
+          }
           if (/^(image|audio|video)\//.test(file.type)) {
             if (mode === 'board-list') {
               let media, type='image';
@@ -2466,11 +2705,7 @@
               else { type=file.type.startsWith('audio/')?'audio':'video';const data=await new Promise((resolve,reject)=>{const reader=new FileReader();reader.onload=()=>resolve(reader.result);reader.onerror=reject;reader.readAsDataURL(file);});media={data,name:file.name,width:320,height:type==='audio'?110:246}; }
               const card = { id: 1, type, x: 0, y: 0, ...media, groupId: null };
               const board = createBoard(file.name.replace(/\.[^.]+$/, '') || 'Board gambar', [card], []);
-              boards.push(board);
-              overviewSelectedBoardId = board.id;
-              dirty = true;
-              saveState(false);
-              renderBoardOverview();
+              boards.push(board); currentBoardId = board.id; loadCurrentBoard(); dirty = true; lastSnapshot = serializeHistoryState(); renderAll(); closeBoardOverview(true); document.body.classList.remove('home-mode');
             } else await importMediaFile(file, lastPointer.x, lastPointer.y);
             return;
           }
@@ -2480,11 +2715,7 @@
             const imported = normalizeImportedBoard(source, 1);
             const board = createBoard(`${source.name || 'Board impor'}`, imported.cards, imported.connections);
             board.camera = source.camera && Number.isFinite(source.camera.scale) ? source.camera : { x: 0, y: 0, scale: 1 };
-            boards.push(board);
-            overviewSelectedBoardId = board.id;
-            dirty = true;
-            saveState(false);
-            renderBoardOverview();
+            boards.push(board); currentBoardId = board.id; loadCurrentBoard(); dirty = true; lastSnapshot = serializeHistoryState(); renderAll(); closeBoardOverview(true); document.body.classList.remove('home-mode');
           } else {
             const imported = normalizeImportedBoard(source, nextId);
             if (!imported.cards.length) throw new Error('Board impor tidak memiliki konten untuk ditambahkan.');
@@ -2505,7 +2736,7 @@
         } catch (error) {
           window.alert(error.message || 'File tidak dapat diimpor.');
         } finally {
-          importMode = 'merge';
+          importMode = 'board-list';
           importFile.value = '';
         }
       }
@@ -2608,7 +2839,7 @@
       }
 
       function updateScrim() {
-        const open = versionModal.classList.contains('open') || exportModal.classList.contains('open') || settingsModal.classList.contains('open') || documentModal.classList.contains('open');
+        const open = versionModal.classList.contains('open') || exportModal.classList.contains('open') || settingsModal.classList.contains('open') || documentModal.classList.contains('open') || allBoardsModal.classList.contains('open') || newBoardModal.classList.contains('open') || closeBoardWarningModal.classList.contains('open');
         scrim.classList.toggle('open', open);
       }
 
@@ -2646,31 +2877,23 @@
 
       function renderBoardOverview() {
         boardOverviewGrid.replaceChildren();
-        overviewSelectedBoardId = overviewSelectedBoardId && boards.some(board => board.id === overviewSelectedBoardId) ? overviewSelectedBoardId : currentBoardId;
         const newCard = document.createElement('button');
         newCard.type = 'button';
         newCard.className = 'board-card board-new-card';
         newCard.append(lucideIcon('plus'));
         const newLabel = document.createElement('strong');
-        newLabel.textContent = 'Board baru';
+        newLabel.textContent = 'New board';
         newCard.append(newLabel);
-        newCard.addEventListener('click', () => { addBoard(); closeBoardOverview(true); });
+        newCard.addEventListener('click', requestNewBoard);
         boardOverviewGrid.appendChild(newCard);
-        const ordered = [...boards].sort((a, b) => (a.id === currentBoardId ? -1 : b.id === currentBoardId ? 1 : 0));
+        const ordered = recentIds.map(id => boards.find(board => board.id === id)).filter(board => board?.savedAt).slice(0, 7);
         ordered.forEach(board => {
           const card = document.createElement('article');
           card.tabIndex = 0;
           card.dataset.boardId = board.id;
-          card.className = `board-card${board.id === currentBoardId ? ' active' : ''}${board.id === overviewSelectedBoardId ? ' focused' : ''}`;
+          card.className = 'board-card';
           card.innerHTML = `<div class="board-thumbnail" aria-hidden="true"></div><strong></strong><span></span>`;
-          const preview = card.querySelector('.board-thumbnail');
-          const boardCards = board.cards || [];
-          const minX = boardCards.length ? Math.min(...boardCards.map(item => Number(item.x) || 0)) : 0;
-          const minY = boardCards.length ? Math.min(...boardCards.map(item => Number(item.y) || 0)) : 0;
-          const maxX = boardCards.length ? Math.max(...boardCards.map(item => (Number(item.x) || 0) + (Number(item.width) || 100) * (Number(item.scale)||1))) : 1;
-          const maxY = boardCards.length ? Math.max(...boardCards.map(item => (Number(item.y) || 0) + (Number(item.height) || 50) * (Number(item.scale)||1))) : 1;
-          const spanX = Math.max(1, maxX - minX), spanY = Math.max(1, maxY - minY);
-          boardCards.forEach(item => { const mini = document.createElement('i'); mini.className='board-thumbnail-card'; const s=Number(item.scale)||1; mini.style.left=`${4 + ((item.x-minX)/spanX)*92}%`; mini.style.top=`${4 + ((item.y-minY)/spanY)*90}%`; mini.style.width=`${Math.max(1.5, Math.min(92, (((item.width || 96)*s)/spanX)*92))}%`; mini.style.height=`${Math.max(1.5, Math.min(90, (((item.height || 40)*s)/spanY)*90))}%`; mini.style.background=item.type ? '#eef2f7' : (item.color || '#3978f6'); preview.append(mini); });
+          renderBoardThumbnail(card.querySelector('.board-thumbnail'), board);
           card.querySelector('strong').textContent = board.name;
           card.querySelector('span').textContent = `${board.cards?.length || 0} kartu · ${board.connections?.length || 0} garis`;
           const menuButton = document.createElement('button');
@@ -2678,20 +2901,23 @@
           menuButton.className = 'board-card-menu-button';
           menuButton.setAttribute('aria-label', `Menu ${board.name}`);
           menuButton.append(lucideIcon('more'));
-          menuButton.addEventListener('click', event => {
-            event.stopPropagation();
-            selectOverviewBoard(board.id);
-            openBoardCardMenu(board.id, menuButton);
-          });
+          menuButton.addEventListener('click', event => { event.stopPropagation(); selectOverviewBoard(board.id); openBoardCardMenu(board.id, menuButton); });
           card.append(menuButton);
-          card.addEventListener('click', () => selectOverviewBoard(board.id));
-          card.addEventListener('dblclick', () => openOverviewBoard(board.id));
-          card.addEventListener('keydown', event => {
-            if (event.key === 'Enter') openOverviewBoard(board.id);
-            if (event.key === 'Delete') { event.preventDefault(); event.stopPropagation(); deleteOverviewBoard(); }
-          });
+          card.addEventListener('click', event => { if (!event.target.closest('.board-card-menu-button')) openOverviewBoard(board.id); });
+          card.addEventListener('keydown', event => { if (event.key === 'Enter' && !event.target.closest('.board-card-menu-button')) openOverviewBoard(board.id); });
           boardOverviewGrid.appendChild(card);
         });
+      }
+
+      function renderBoardThumbnail(preview, board) {
+        preview.replaceChildren();
+        const boardCards = board.cards || [];
+        const minX = boardCards.length ? Math.min(...boardCards.map(item => Number(item.x) || 0)) : 0;
+        const minY = boardCards.length ? Math.min(...boardCards.map(item => Number(item.y) || 0)) : 0;
+        const maxX = boardCards.length ? Math.max(...boardCards.map(item => (Number(item.x) || 0) + (Number(item.width) || 100) * (Number(item.scale)||1))) : 1;
+        const maxY = boardCards.length ? Math.max(...boardCards.map(item => (Number(item.y) || 0) + (Number(item.height) || 50) * (Number(item.scale)||1))) : 1;
+        const spanX = Math.max(1, maxX - minX), spanY = Math.max(1, maxY - minY);
+        boardCards.forEach(item => { const mini = document.createElement('i'); mini.className='board-thumbnail-card'; const s=Number(item.scale)||1; mini.style.left=`${4 + ((item.x-minX)/spanX)*92}%`; mini.style.top=`${4 + ((item.y-minY)/spanY)*90}%`; mini.style.width=`${Math.max(1.5, Math.min(92, (((item.width || 96)*s)/spanX)*92))}%`; mini.style.height=`${Math.max(1.5, Math.min(90, (((item.height || 40)*s)/spanY)*90))}%`; mini.style.background=item.type ? '#eef2f7' : (item.color || '#3978f6'); preview.append(mini); });
       }
 
       function selectOverviewBoard(id) {
@@ -2701,9 +2927,42 @@
 
       function openOverviewBoard(id = overviewSelectedBoardId) {
         if (!boards.some(board => board.id === id)) return;
-        switchBoard(id);
+        closedBoardIds.delete(id);
+        if (id !== currentBoardId && switchBoard(id) === false) return;
+        renderAll();
+        closeAllBoards();
         closeBoardOverview(true);
       }
+
+      function renderAllBoards(selectedId = overviewSelectedBoardId) {
+        const savedBoards = boards.filter(board => board.savedAt).sort((a,b) => a.name.localeCompare(b.name, 'id', { sensitivity:'base' }));
+        allBoardsList.replaceChildren();
+        if (!savedBoards.length) {
+          allBoardsList.innerHTML = '<div class="preview-empty">Belum ada board tersimpan.</div>';
+          allBoardsPreview.innerHTML = '<div class="preview-empty">Simpan board dengan Ctrl+S agar muncul di sini.</div>';
+          return;
+        }
+        savedBoards.forEach(board => {
+          const button = document.createElement('button'); button.type='button'; button.className=`all-board-item${selectedId===board.id?' active':''}`; button.textContent=board.name;
+          button.addEventListener('click', () => { overviewSelectedBoardId=board.id; renderAllBoards(board.id); });
+          button.addEventListener('dblclick', () => openOverviewBoard(board.id));
+          allBoardsList.append(button);
+        });
+        const selected = savedBoards.find(board => board.id === selectedId);
+        if (!selected) { allBoardsPreview.innerHTML='<div class="preview-empty">Pilih nama board untuk melihat pratinjau.</div>'; return; }
+        allBoardsPreview.innerHTML='<div class="board-thumbnail" aria-hidden="true"></div><h3></h3><p></p><p></p>';
+        renderBoardThumbnail(allBoardsPreview.querySelector('.board-thumbnail'), selected);
+        allBoardsPreview.querySelector('h3').textContent=selected.name;
+        allBoardsPreview.querySelectorAll('p')[0].textContent=`${selected.cards?.length||0} kartu · ${selected.connections?.length||0} garis`;
+        allBoardsPreview.querySelectorAll('p')[1].textContent=`Terakhir disimpan ${new Date(selected.savedAt).toLocaleString('id-ID')}`;
+      }
+
+      function openAllBoards() {
+        overviewSelectedBoardId = null; renderAllBoards();
+        allBoardsModal.classList.add('open'); allBoardsModal.setAttribute('aria-hidden','false'); updateScrim();
+      }
+
+      function closeAllBoards() { allBoardsModal.classList.remove('open'); allBoardsModal.setAttribute('aria-hidden','true'); updateScrim(); }
 
       function openBoardCardMenu(id, anchor) {
         boardMenuTargetId = id;
@@ -2726,43 +2985,64 @@
         if (action === 'open') openOverviewBoard(board.id);
         else if (action === 'rename') {
           const value = window.prompt('Nama board', board.name);
-          if (value?.trim()) { board.name = value.trim(); dirty = true; saveState(false); renderBoardOverview(); updateBoardControls(); }
+          if (value?.trim()) { board.name = value.trim(); persistBoardCollection(); renderBoardOverview(); updateBoardControls(); }
         } else if (action === 'duplicate') {
           const copy = typeof structuredClone === 'function' ? structuredClone(board) : JSON.parse(JSON.stringify(board));
           copy.id = makeId('board');
           copy.name = `${board.name} salinan`;
+          copy.savedAt = Date.now();
           boards.push(copy);
+          recentIds = [copy.id, ...recentIds.filter(id => id !== copy.id)].slice(0, 7);
           overviewSelectedBoardId = copy.id;
-          dirty = true;
-          saveState(false);
+          persistBoardCollection();
           renderBoardOverview();
         } else if (action === 'export') exportBoardData(board, board.name);
         else if (action === 'delete') deleteOverviewBoard();
         closeBoardCardMenu();
       }
 
+      function persistBoardCollection() {
+        syncCurrentBoard();
+        let previous = { boards: [] };
+        try { previous = JSON.parse(persistedStateSnapshot || '{}'); } catch (_) {}
+        const previousById = new Map((previous.boards || []).map(board => [board.id, board]));
+        const safeBoards = boards.filter(board => board.savedAt).map(board => {
+          if (dirty && board.id === currentBoardId && previousById.has(board.id)) return { ...previousById.get(board.id), name: board.name };
+          return board;
+        });
+        const safeCurrentId = safeBoards.some(board => board.id === currentBoardId) ? currentBoardId : safeBoards[0]?.id || null;
+        const snapshot = JSON.stringify({ version: 4, currentBoardId: safeCurrentId, recentIds: recentIds.filter(id => safeBoards.some(board => board.id === id)).slice(0,7), boards: safeBoards });
+        persistedStateSnapshot = snapshot;
+        writeStoredState(snapshot);
+      }
+
       function deleteOverviewBoard() {
         const board = boards.find(item => item.id === overviewSelectedBoardId);
         if (!board) return;
-        if (!window.confirm(`Hapus “${board.name}” beserta seluruh isinya? Tindakan ini tidak dapat dibatalkan.`)) return;
+        if (!window.confirm(`Hapus board tersimpan “${board.name}” beserta seluruh isinya? Tindakan ini tidak dapat dibatalkan.`)) return;
+        const deletingActive = currentBoardId === board.id;
         boards = boards.filter(item => item.id !== board.id);
-        if (currentBoardId === board.id) currentBoardId = boards[0]?.id || null;
+        recentIds = recentIds.filter(id => id !== board.id);
+        closedBoardIds.delete(board.id);
+        if (deletingActive) currentBoardId = boards[0]?.id || null;
         overviewSelectedBoardId = currentBoardId;
-        loadCurrentBoard();
-        dirty = true;
-        saveState(false);
+        if (deletingActive) { loadCurrentBoard(); dirty = false; }
+        persistBoardCollection();
         renderAll();
         renderBoardOverview();
+        renderAllBoards();
       }
 
       function openBoardOverview() {
         renderBoardOverview();
-        const hasBoardData = Boolean(currentBoard());
-        closeBoardOverviewButton.hidden = !hasBoardData;
+        document.body.classList.add('home-mode');
+        activeBoardTitle.textContent = 'Recent board';
+        ['saveBoard','exportBoard','importBoard','closeBoardMenu','renameBoardMenu','importMedia'].forEach(id => { const element=document.getElementById(id); if(element)element.disabled=true; });
+        document.querySelectorAll('.editor-menus .app-menu:not(:first-child) .menu-trigger').forEach(button => button.disabled=true);
         boardOverviewModal.classList.add('open');
         boardOverviewModal.setAttribute('aria-hidden', 'false');
         updateScrim();
-        if (!closeBoardOverviewButton.hidden) closeBoardOverviewButton.focus(); else boardOverviewGrid.querySelector('button')?.focus();
+        boardOverviewGrid.querySelector('button')?.focus();
       }
 
       function closeBoardOverview(force = false) {
@@ -2770,8 +3050,47 @@
         closeBoardCardMenu();
         boardOverviewModal.classList.remove('open');
         boardOverviewModal.setAttribute('aria-hidden', 'true');
+        document.body.classList.remove('home-mode');
+        ['saveBoard','exportBoard','importBoard','closeBoardMenu','renameBoardMenu','importMedia'].forEach(id => { const element=document.getElementById(id); if(element)element.disabled=false; });
+        document.querySelectorAll('.editor-menus .app-menu .menu-trigger').forEach(button => button.disabled=false);
         updateScrim();
       }
+
+      function closeCurrentBoardToHome() {
+        if (!currentBoard() || document.body.classList.contains('home-mode')) return;
+        finishEdit(true);
+        const visibleBoards = boards.filter(board => !closedBoardIds.has(board.id));
+        const currentIndex = visibleBoards.findIndex(board => board.id === currentBoardId);
+        pendingCloseBoardId = currentBoardId;
+        pendingNextBoardId = visibleBoards.length > 1 ? visibleBoards[(currentIndex + 1) % visibleBoards.length].id : null;
+        const isDraft = !currentBoard()?.savedAt;
+        document.getElementById('discardCloseBoard').textContent = isDraft ? 'Hapus draft' : 'Tutup tanpa menyimpan';
+        document.getElementById('closeBoardWarningText').textContent = isDraft ? 'Board ini belum pernah disimpan. Simpan sekarang atau hapus draft sebelum membuka board berikutnya.' : 'Secara default perubahan akan disimpan, lalu board berikutnya dibuka.';
+        closeBoardWarningModal.classList.add('open');
+        closeBoardWarningModal.setAttribute('aria-hidden','false');
+        updateScrim();
+        document.getElementById('saveCloseBoard').focus();
+      }
+
+      function cancelCloseBoardWarning() { closeBoardWarningModal.classList.remove('open'); closeBoardWarningModal.setAttribute('aria-hidden','true'); updateScrim(); }
+
+      function completeBoardClose() {
+        const closingId = pendingCloseBoardId;
+        if (boards.some(board => board.id === closingId)) closedBoardIds.add(closingId);
+        closeBoardWarningModal.classList.remove('open'); closeBoardWarningModal.setAttribute('aria-hidden','true');
+        pendingCloseBoardId = null;
+        const nextId = pendingNextBoardId && boards.some(board => board.id === pendingNextBoardId) ? pendingNextBoardId : boards.find(board => !closedBoardIds.has(board.id))?.id;
+        pendingNextBoardId = null;
+        if (nextId) {
+          currentBoardId = nextId; closedBoardIds.delete(nextId); loadCurrentBoard(); dirty=false; undoStack=[]; redoStack=[]; lastSnapshot=serializeHistoryState(); renderAll(); document.body.classList.remove('home-mode'); updateScrim();
+        } else {
+          renderAll(); openBoardOverview(); updateScrim();
+        }
+      }
+
+      function discardAndCloseBoard() { if (dirty) discardCurrentDraft(); completeBoardClose(); }
+
+      async function saveAndCloseBoard() { if (await saveBoardNow()) completeBoardClose(); }
 
       function openSettings() {
         settingsModal.classList.add('open');
@@ -2789,7 +3108,9 @@
       function closeOverlays() {
         closeVersionHistory();
         closeExportDialog();
-        closeBoardOverview();
+        closeAllBoards();
+        closeNewBoardDialog();
+        cancelCloseBoardWarning();
         closeSettings();
         documentModal.classList.remove('open'); documentModal.setAttribute('aria-hidden','true'); updateScrim();
       }
@@ -2806,6 +3127,11 @@
           return;
         }
         if (!event.target.closest('.card') && event.pointerType === 'touch') {
+          finishEdit(true);
+          startPan(event, true);
+          return;
+        }
+        if (activeTool === 'hand' && event.button === 0) {
           finishEdit(true);
           startPan(event, true);
           return;
@@ -2832,36 +3158,45 @@
         const nativeZoomKey = (event.ctrlKey || event.metaKey) && ['+', '-', '=', '0'].includes(event.key);
         if (nativeZoomKey) event.preventDefault();
         const formFocused = event.target.matches?.('input, select, textarea, [contenteditable="true"]');
-        const overlayOpen = versionModal.classList.contains('open') || exportModal.classList.contains('open') || boardOverviewModal.classList.contains('open') || settingsModal.classList.contains('open') || documentModal.classList.contains('open');
+        const overlayOpen = versionModal.classList.contains('open') || exportModal.classList.contains('open') || boardOverviewModal.classList.contains('open') || allBoardsModal.classList.contains('open') || newBoardModal.classList.contains('open') || closeBoardWarningModal.classList.contains('open') || settingsModal.classList.contains('open') || documentModal.classList.contains('open');
         const shortcutsEnabled = Boolean(currentBoard()) && editingId === null && !overlayOpen && !formFocused;
         const command = event.ctrlKey || event.metaKey;
         const key = event.key.toLowerCase();
+        if (!command && event.shiftKey && key === 'w' && !formFocused && editingId === null) { event.preventDefault(); if (!overlayOpen && currentBoard() && !document.body.classList.contains('home-mode')) closeCurrentBoardToHome(); return; }
+        if (!command && event.shiftKey && key === 'r') { event.preventDefault(); if (!overlayOpen && !formFocused) openBoardOverview(); return; }
+        if (!formFocused && command && ['n','o','s','e','i','z','y','d','g','u','x','c','a'].includes(key)) event.preventDefault();
+        if (command && event.shiftKey && key === 'o') { event.preventDefault(); if(!formFocused){importMode='board-list';importFile.click();} return; }
+        if (shortcutsEnabled && command && !event.shiftKey && (event.key==='+' || event.key==='=')) { event.preventDefault(); zoomFromPointer('in'); return; }
+        if (shortcutsEnabled && command && !event.shiftKey && event.key==='-') { event.preventDefault(); zoomFromPointer('out'); return; }
+        if (shortcutsEnabled && command && !event.shiftKey && key === 'a') { event.preventDefault(); selectAllCards(); return; }
+        if (shortcutsEnabled && command && event.shiftKey && key === 'a') { event.preventDefault(); fitAllCards(); return; }
+        if (shortcutsEnabled && command && !event.shiftKey && key === 'g') { event.preventDefault(); groupSelectedCards(); return; }
+        if (shortcutsEnabled && command && !event.shiftKey && key === 'u') { event.preventDefault(); ungroupSelectedCards(); return; }
         if (shortcutsEnabled && command && event.shiftKey && key === 'e') {
           event.preventDefault();
-          if (selectedIds.size !== 1) return;
-          if (!window.EyeDropper) { alert('Color picker belum tersedia di browser ini.'); return; }
-          new EyeDropper().open().then(({ sRGBHex }) => { if (selectedIds.size === 1) { applyColorToSelection(sRGBHex, 'card'); rememberColor(sRGBHex); } }).catch(() => {});
+          openColorPicker();
           return;
         }
         if (shortcutsEnabled && event.shiftKey && !command && !event.altKey && key === 'l') { event.preventDefault(); if (!event.repeat) toggleSelectionLinks(); return; }
         if (shortcutsEnabled && command && event.altKey && ['ArrowLeft','ArrowRight'].includes(event.key)) { event.preventDefault(); const index = boards.findIndex(b => b.id === currentBoardId); switchBoard(boards[(index + (event.key === 'ArrowRight' ? 1 : boards.length - 1)) % boards.length].id); return; }
-        if (command && !event.shiftKey && key === 's') {
+        if (command && !event.shiftKey && key === 's' && !document.body.classList.contains('home-mode')) {
           event.preventDefault();
           saveBoardNow();
           return;
         }
-        if (boardOverviewModal.classList.contains('open') && event.key === 'Delete') {
+        if (allBoardsModal.classList.contains('open') && event.key === 'Delete') {
           event.preventDefault();
           deleteOverviewBoard();
           return;
         }
         if (command && !event.shiftKey && key === 'o') {
           event.preventDefault();
-          if (!formFocused && editingId === null) openBoardOverview();
+          if (!formFocused && editingId === null) openAllBoards();
         }
-        if (shortcutsEnabled && command && !event.shiftKey && key === 'n') {
+        if (!formFocused && editingId === null && command && !event.shiftKey && key === 'n') {
           event.preventDefault();
-          addBoard();
+          requestNewBoard();
+          return;
         }
         if (shortcutsEnabled && event.shiftKey && !command && key === 'p') {
           event.preventDefault();
@@ -2877,7 +3212,7 @@
         }
         if (shortcutsEnabled && command && !event.shiftKey && key === 'i') {
           event.preventDefault();
-          importMode = 'merge';
+          importMode = 'board-list';
           importFile.click();
         }
         if (shortcutsEnabled && event.code === 'Space' && !event.repeat) {
@@ -2888,7 +3223,7 @@
           event.preventDefault();
           undo();
         }
-        if (shortcutsEnabled && command && ((event.shiftKey && key === 'z') || key === 'y')) {
+        if (shortcutsEnabled && command && !event.shiftKey && key === 'y') {
           event.preventDefault();
           redo();
         }
@@ -2903,10 +3238,6 @@
         if (shortcutsEnabled && command && !event.shiftKey && key === 'd') {
           event.preventDefault();
           duplicateSelectedCards();
-        }
-        if (shortcutsEnabled && (event.ctrlKey || event.metaKey) && !event.shiftKey && event.key.toLowerCase() === 'a') {
-          event.preventDefault();
-          selectAllCards();
         }
         if (shortcutsEnabled && (event.ctrlKey || event.metaKey) && event.shiftKey && event.key === 'ArrowUp') {
           event.preventDefault();
@@ -2923,14 +3254,6 @@
         if (shortcutsEnabled && event.key === 'Enter' && selectedIds.size === 1) {
           event.preventDefault();
           beginEdit([...selectedIds][0]);
-        }
-        if (shortcutsEnabled && !command && !event.shiftKey && !event.altKey && key === 'g') {
-          event.preventDefault();
-          groupSelectedCards();
-        }
-        if (shortcutsEnabled && !command && !event.shiftKey && !event.altKey && key === 'u') {
-          event.preventDefault();
-          ungroupSelectedCards();
         }
         if (shortcutsEnabled && !event.ctrlKey && !event.metaKey && !event.altKey && !event.shiftKey) {
           const alignments = { t: 'top', b: 'bottom', l: 'left', r: 'right', c: 'centerX', e: 'centerY' };
@@ -2979,7 +3302,7 @@
         }
       });
       window.addEventListener('beforeunload', event => {
-        if (!dirty) return;
+        if (!currentBoard() || document.body.classList.contains('home-mode')) return;
         event.preventDefault();
         event.returnValue = '';
       });
@@ -2992,6 +3315,9 @@
       scrim.addEventListener('click', closeOverlays);
       cursorTool.addEventListener('click', () => setActiveTool('cursor'));
       connectorTool.addEventListener('click', () => setActiveTool('connector'));
+      handTool.addEventListener('click', () => setActiveTool('hand'));
+      addCardTool.addEventListener('click', () => createCard(lastPointer.x,lastPointer.y,'New idea',false));
+      pickerTool.addEventListener('click', openColorPicker);
       mobileZoomOut.addEventListener('click', () => zoomAt(window.innerWidth / 2, window.innerHeight / 2, .8));
       mobileZoomIn.addEventListener('click', () => zoomAt(window.innerWidth / 2, window.innerHeight / 2, 1.25));
       mobileFit.addEventListener('click', fitAllCards);
@@ -3000,14 +3326,27 @@
       boardName.addEventListener('keydown', event => {
         if (event.key === 'Enter') boardName.blur();
       });
-      newBoardButton.addEventListener('click', () => { addBoard(); closeBoardOverview(); });
+      newBoardButton.addEventListener('click', requestNewBoard);
       saveBoardButton.addEventListener('click', saveBoardNow);
-      openBoardsMenu.addEventListener('click', openBoardOverview);
+      openBoardsMenu.addEventListener('click', openAllBoards);
       renameBoardMenu.addEventListener('click', promptRenameCurrentBoard);
       exportBoardButton.addEventListener('click', openExportDialog);
-      importBoardButton.addEventListener('click', () => { importMode = 'merge'; importFile.click(); });
+      importBoardButton.addEventListener('click', () => { importMode = 'board-list'; importFile.click(); });
+      document.getElementById('openDeviceMenu').addEventListener('click', () => { importMode='board-list'; importFile.click(); });
+      document.getElementById('closeBoardMenu').addEventListener('click', closeCurrentBoardToHome);
       importFile.addEventListener('change', () => importBoardFile(importFile.files[0]));
       importBoardFromOverview.addEventListener('click', () => { importMode = 'board-list'; importFile.click(); });
+      document.getElementById('homeAllBoards').addEventListener('click', openAllBoards);
+      document.getElementById('openAllBoardsHome').addEventListener('click', openAllBoards);
+      closeAllBoardsButton.addEventListener('click', closeAllBoards);
+      allBoardsModal.addEventListener('pointerdown', event => { if (event.target === allBoardsModal) closeAllBoards(); });
+      confirmNewBoard.addEventListener('click', confirmNewBoardCreation);
+      document.getElementById('cancelNewBoard').addEventListener('click', closeNewBoardDialog);
+      document.getElementById('cancelNewBoardX').addEventListener('click', closeNewBoardDialog);
+      newBoardName.addEventListener('keydown', event => { if (event.key === 'Enter') { event.preventDefault(); confirmNewBoardCreation(); } });
+      document.getElementById('cancelCloseBoard').addEventListener('click', cancelCloseBoardWarning);
+      document.getElementById('discardCloseBoard').addEventListener('click', discardAndCloseBoard);
+      document.getElementById('saveCloseBoard').addEventListener('click', saveAndCloseBoard);
       importMediaButton.addEventListener('click', () => mediaFile.click());
       mediaFile.addEventListener('change', () => {
         importMediaFile(mediaFile.files[0]);
@@ -3016,7 +3355,9 @@
       closeExportModalButton.addEventListener('click', closeExportDialog);
       cancelExportButton.addEventListener('click', closeExportDialog);
       confirmExportButton.addEventListener('click', () => {
-        exportCurrentBoard(exportName.value);
+        const board = currentBoard();
+        const format = document.querySelector('input[name="exportFormat"]:checked')?.value || 'json';
+        if (format === 'pdf') exportBoardPdf(board, exportName.value); else exportCurrentBoard(exportName.value);
         closeExportDialog();
       });
       exportName.addEventListener('keydown', event => {
@@ -3028,30 +3369,44 @@
       exportModal.addEventListener('pointerdown', event => {
         if (event.target === exportModal) closeExportDialog();
       });
-      closeBoardOverviewButton?.addEventListener('click', () => closeBoardOverview());
       boardOverviewModal.addEventListener('pointerdown', event => { if (event.target === boardOverviewModal) event.stopPropagation(); });
       boardCardMenu.addEventListener('click', event => {
         const item = event.target.closest('[data-board-action]');
         if (item) runBoardCardAction(item.dataset.boardAction);
       });
       settingsButton.addEventListener('click', openSettings);
-      document.getElementById('shortcutMenu').addEventListener('click', openSettings);
       document.getElementById('undoMenu').addEventListener('click', undo);
       document.getElementById('redoMenu').addEventListener('click', redo);
       document.getElementById('duplicateMenu').addEventListener('click', duplicateSelectedCards);
       document.getElementById('groupMenu').addEventListener('click', groupSelectedCards);
+      document.getElementById('ungroupMenu').addEventListener('click', ungroupSelectedCards);
+      document.getElementById('cutMenu').addEventListener('click', cutSelectedCards);
+      document.getElementById('copyMenu').addEventListener('click', copySelectedCards);
+      document.getElementById('pasteMenu').addEventListener('click', pasteFromClipboard);
+      document.getElementById('deleteMenu').addEventListener('click', deleteSelectedCards);
+      document.getElementById('selectAllMenu').addEventListener('click', selectAllCards);
       document.getElementById('fitMenu').addEventListener('click', fitAllCards);
-      document.getElementById('frontMenu').addEventListener('click', () => moveSelectedToLayer('top'));
-      document.getElementById('backMenu').addEventListener('click', () => moveSelectedToLayer('bottom'));
-      document.getElementById('alignLeftMenu').addEventListener('click', () => alignSelected('left'));
-      document.getElementById('alignTopMenu').addEventListener('click', () => alignSelected('top'));
+      document.getElementById('zoomInMenu').addEventListener('click', () => zoomFromPointer('in'));
+      document.getElementById('zoomOutMenu').addEventListener('click', () => zoomFromPointer('out'));
       document.getElementById('quickUndo').addEventListener('click', undo);
       document.getElementById('quickRedo').addEventListener('click', redo);
+      document.getElementById('quickCut').addEventListener('click', cutSelectedCards);
+      document.getElementById('quickCopy').addEventListener('click', copySelectedCards);
+      document.getElementById('quickPaste').addEventListener('click', pasteFromClipboard);
       document.getElementById('quickDuplicate').addEventListener('click', duplicateSelectedCards);
+      document.getElementById('quickRepeat').addEventListener('click', repeatLastCardAction);
       document.getElementById('quickGroup').addEventListener('click', groupSelectedCards);
       document.getElementById('quickUngroup').addEventListener('click', ungroupSelectedCards);
+      document.getElementById('quickSelectAll').addEventListener('click', selectAllCards);
       document.getElementById('quickDelete').addEventListener('click', deleteSelectedCards);
+      document.getElementById('quickZoomIn').addEventListener('click', () => zoomFromPointer('in'));
+      document.getElementById('quickZoomOut').addEventListener('click', () => zoomFromPointer('out'));
       document.getElementById('quickFit').addEventListener('click', fitAllCards);
+      document.getElementById('animationMenu').addEventListener('click', () => { dragMotionEnabled=!dragMotionEnabled;localStorage.setItem(MOTION_STORAGE_KEY,String(dragMotionEnabled));updateMotionSetting(); });
+      document.getElementById('toggleToolbarMenu').addEventListener('click', event => toggleSurface(toolRail,event.currentTarget));
+      document.getElementById('togglePaletteMenu').addEventListener('click', event => toggleSurface(colorBar,event.currentTarget));
+      document.getElementById('toggleHistoryMenu').addEventListener('click', event => toggleSurface(document.getElementById('colorHistory'),event.currentTarget));
+      document.getElementById('toggleBoardStripMenu').addEventListener('click', event => toggleSurface(document.getElementById('boardTabs'),event.currentTarget));
       snapToggleMenu.addEventListener('click', () => {
         snapEnabled = !snapEnabled;
         localStorage.setItem(SNAP_STORAGE_KEY, String(snapEnabled));
@@ -3074,7 +3429,8 @@
         closeHeaderMenus();
         if (shouldOpen) menu.classList.add('open');
       }));
-      document.querySelectorAll('.menu-command').forEach(command => command.addEventListener('click', closeHeaderMenus));
+      const persistentMenuCommands = new Set(['animationMenu','snapToggleMenu','toggleToolbarMenu','togglePaletteMenu','toggleHistoryMenu','toggleBoardStripMenu']);
+      document.querySelectorAll('.menu-command').forEach(command => command.addEventListener('click', () => { if (!persistentMenuCommands.has(command.id)) closeHeaderMenus(); }));
       closeSettingsButton.addEventListener('click', closeSettings);
       settingsModal.addEventListener('pointerdown', event => { if (event.target === settingsModal) closeSettings(); });
       closeDocumentModalButton.addEventListener('click', () => { documentModal.classList.remove('open'); documentModal.setAttribute('aria-hidden','true'); updateScrim(); });
@@ -3173,9 +3529,8 @@
       }
       function renderBoardTabs() {
         const root=document.getElementById('boardTabs');if(!root)return;root.replaceChildren();
-        const home=document.createElement('button'); home.textContent='Boards';home.onclick=openBoardOverview;root.append(home);
-        boards.forEach(b=>{const button=document.createElement('button');button.textContent=b.name;button.classList.toggle('active',b.id===currentBoardId);button.onclick=()=>{switchBoard(b.id);closeBoardOverview();};root.append(button);});
-        const plus=document.createElement('button');plus.textContent='+';plus.setAttribute('aria-label','Board baru');plus.onclick=()=>{addBoard();closeBoardOverview();};root.append(plus);
+        boards.filter(b=>!closedBoardIds.has(b.id)).forEach(b=>{const tab=document.createElement('div');tab.className=`board-tab${b.id===currentBoardId?' active':''}`;const button=document.createElement('button');button.className='board-tab-open';button.textContent=b.name;button.onclick=()=>{closedBoardIds.delete(b.id);switchBoard(b.id);closeBoardOverview();};const close=document.createElement('button');close.className='board-tab-close';close.type='button';close.title=`Tutup ${b.name}`;close.setAttribute('aria-label',`Tutup ${b.name}`);close.append(lucideIcon('x'));close.onclick=event=>{event.stopPropagation();if(b.id===currentBoardId)closeCurrentBoardToHome();else closedBoardIds.add(b.id);renderBoardTabs();};tab.append(button,close);root.append(tab);});
+        const plus=document.createElement('button');plus.textContent='+';plus.setAttribute('aria-label','Board baru');plus.onclick=requestNewBoard;root.append(plus);
       }
 
       function installMediaPlayer(el, card) {
