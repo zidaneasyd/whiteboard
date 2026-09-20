@@ -1,0 +1,11 @@
+{
+  "name": "whiteboard-studio",
+  "version": "1.0.0-rc.1",
+  "private": true,
+  "description": "Whiteboard lokal dengan kartu, media, koneksi, dan IndexedDB.",
+  "scripts": {
+    "test": "node tests/core.test.cjs && node tests/static.test.cjs",
+    "serve": "node server.cjs"
+  },
+  "engines": { "node": ">=18" }
+}
