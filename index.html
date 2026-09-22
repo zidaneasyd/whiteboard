@@ -1,6 +1,11 @@
 <!doctype html>
 <html lang="id">
 <head>
+  <link rel="manifest" href="./manifest.json">
+<meta name="theme-color" content="#ffffff">
+
+<link rel="icon" type="image/svg+xml" href="./icons/icon-192.svg">
+<link rel="apple-touch-icon" href="./icons/icon-192.svg">
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
   <meta name="theme-color" content="#f4f1e8">
@@ -1317,6 +1322,7 @@
       }
 
       async function writeStoredState(snapshot) {
+        let indexedSuccess = false;
         try {
           const db = await openDatabase();
           await new Promise((resolve, reject) => {
@@ -1325,10 +1331,17 @@
             transaction.oncomplete = resolve;
             transaction.onerror = () => reject(transaction.error);
           });
-          return true;
+          indexedSuccess = true;
         } catch (error) {
           console.warn('Penyimpanan IndexedDB gagal', error);
-          return false;
+        }
+
+        try {
+          localStorage.setItem(STORAGE_KEY, snapshot);
+          return true;
+        } catch (error) {
+          console.warn('Penyimpanan localStorage gagal', error);
+          return indexedSuccess;
         }
       }
 
@@ -3206,7 +3219,7 @@ const formFocused = event.target.closest?.(
         const command = event.ctrlKey || event.metaKey;
         const key = event.key.toLowerCase();
         if (!command && event.shiftKey && key === 'w' && !formFocused && editingId === null) { event.preventDefault(); if (!overlayOpen && currentBoard() && !document.body.classList.contains('home-mode')) closeCurrentBoardToHome(); return; }
-        if (!command && event.shiftKey && key === 'r' && !formFocused) { event.preventDefault(); if (!overlayOpen) openBoardOverview(); return; }
+        if (!command && event.shiftKey && key === 'r') { event.preventDefault(); if (!overlayOpen && !formFocused) openBoardOverview(); return; }
         if (!formFocused && command && ['n','o','s','e','i','z','y','d','g','u','x','c','a'].includes(key)) event.preventDefault();
         if (command && event.shiftKey && key === 'o') { event.preventDefault(); if(!formFocused){importMode='board-list';importFile.click();} return; }
         if (shortcutsEnabled && command && !event.shiftKey && (event.key==='+' || event.key==='=')) { event.preventDefault(); zoomFromPointer('in'); return; }
@@ -3220,8 +3233,7 @@ const formFocused = event.target.closest?.(
           openColorPicker();
           return;
         }
-
-        if (shortcutsEnabled && event.shiftKey && !command && !event.altKey && key === 'x') { event.preventDefault(); if (!event.repeat) toggleSelectionLinks(); return; }
+if (shortcutsEnabled && event.shiftKey && !command && !event.altKey && key === 'x') { event.preventDefault(); if (!event.repeat) toggleSelectionLinks(); return; }
         if (shortcutsEnabled && command && event.altKey && ['ArrowLeft','ArrowRight'].includes(event.key)) { event.preventDefault(); const index = boards.findIndex(b => b.id === currentBoardId); switchBoard(boards[(index + (event.key === 'ArrowRight' ? 1 : boards.length - 1)) % boards.length].id); return; }
         if (command && !event.shiftKey && key === 's' && !document.body.classList.contains('home-mode')) {
           event.preventDefault();
@@ -3630,6 +3642,11 @@ const formFocused = event.target.closest?.(
       installMenuIcons();
       loadState().then(() => { renderAll(); openBoardOverview(); });
     })();
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", () => {
+    navigator.serviceWorker.register("./sw.js");
+  });
+}
   </script>
 </body>
 </html>
