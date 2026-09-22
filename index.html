@@ -3206,7 +3206,7 @@ const formFocused = event.target.closest?.(
         const command = event.ctrlKey || event.metaKey;
         const key = event.key.toLowerCase();
         if (!command && event.shiftKey && key === 'w' && !formFocused && editingId === null) { event.preventDefault(); if (!overlayOpen && currentBoard() && !document.body.classList.contains('home-mode')) closeCurrentBoardToHome(); return; }
-        if (!command && event.shiftKey && key === 'r') { event.preventDefault(); if (!overlayOpen && !formFocused) openBoardOverview(); return; }
+        if (!command && event.shiftKey && key === 'r' && !formFocused) { event.preventDefault(); if (!overlayOpen) openBoardOverview(); return; }
         if (!formFocused && command && ['n','o','s','e','i','z','y','d','g','u','x','c','a'].includes(key)) event.preventDefault();
         if (command && event.shiftKey && key === 'o') { event.preventDefault(); if(!formFocused){importMode='board-list';importFile.click();} return; }
         if (shortcutsEnabled && command && !event.shiftKey && (event.key==='+' || event.key==='=')) { event.preventDefault(); zoomFromPointer('in'); return; }
