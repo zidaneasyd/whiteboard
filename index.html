@@ -3220,7 +3220,8 @@ const formFocused = event.target.closest?.(
           openColorPicker();
           return;
         }
-        if (shortcutsEnabled && event.shiftKey && !command && !event.altKey && key === 'l') { event.preventDefault(); if (!event.repeat) toggleSelectionLinks(); return; }
+
+        if (shortcutsEnabled && event.shiftKey && !command && !event.altKey && key === 'x') { event.preventDefault(); if (!event.repeat) toggleSelectionLinks(); return; }
         if (shortcutsEnabled && command && event.altKey && ['ArrowLeft','ArrowRight'].includes(event.key)) { event.preventDefault(); const index = boards.findIndex(b => b.id === currentBoardId); switchBoard(boards[(index + (event.key === 'ArrowRight' ? 1 : boards.length - 1)) % boards.length].id); return; }
         if (command && !event.shiftKey && key === 's' && !document.body.classList.contains('home-mode')) {
           event.preventDefault();
