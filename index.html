@@ -671,6 +671,198 @@
       .save-toast { top: 58px; right: 10px; }
     }
 
+    /* Mobile workspace: compact navigation + transient controls, preserving every command. */
+    .mobile-nav-toggle { display:none; }
+
+    @media (max-width:720px) {
+      html, body { width:100%; height:100%; }
+      body { padding-bottom:env(safe-area-inset-bottom); }
+      .header-panel {
+        z-index:80;
+        height:52px;
+        padding:0 8px;
+        gap:6px;
+        background:rgba(255,255,255,.76);
+        border-bottom:1px solid rgba(36,42,38,.08);
+        box-shadow:0 4px 18px rgba(36,42,38,.055);
+      }
+      .mobile-nav-toggle {
+        display:grid;
+        flex:0 0 38px;
+        width:38px;
+        height:38px;
+        place-items:center;
+        padding:0;
+        border:0;
+        border-radius:10px;
+        color:#3f4652;
+        background:transparent;
+        cursor:pointer;
+      }
+      .mobile-nav-toggle:hover,
+      .mobile-nav-toggle:active,
+      .header-panel.mobile-nav-open .mobile-nav-toggle { background:#edf2fa; }
+      .mobile-nav-toggle svg { width:19px; height:19px; stroke-width:1.8; }
+      .header-brand { flex:0 0 auto; margin:0; }
+      .header-brand .brand-mark { width:28px; height:28px; border-radius:9px; }
+      .header-brand > span:last-child { display:none; }
+      .active-board-title {
+        min-width:0;
+        max-width:none;
+        margin:0 4px 0 auto;
+        overflow:hidden;
+        text-overflow:ellipsis;
+        white-space:nowrap;
+        font-size:10px;
+        font-weight:700;
+        text-align:right;
+      }
+      .editor-menus {
+        position:fixed;
+        z-index:95;
+        top:60px;
+        right:8px;
+        bottom:8px;
+        left:8px;
+        display:none;
+        flex-direction:column;
+        align-items:stretch;
+        gap:5px;
+        overflow:auto;
+        padding:7px;
+        border:1px solid rgba(36,42,38,.10);
+        border-radius:16px;
+        background:rgba(255,255,255,.97);
+        box-shadow:0 18px 55px rgba(36,42,38,.17);
+        backdrop-filter:blur(22px);
+        -webkit-backdrop-filter:blur(22px);
+      }
+      .header-panel.mobile-nav-open .editor-menus { display:flex; }
+      .editor-menus .app-menu { display:block; flex:0 0 auto; }
+      .editor-menus .app-menu + .app-menu::before { display:none; }
+      .editor-menus .menu-trigger {
+        position:relative;
+        display:flex;
+        width:100%;
+        min-height:44px;
+        align-items:center;
+        justify-content:space-between;
+        padding:0 13px;
+        border-radius:10px;
+        color:#303744;
+        background:#f7f8fb;
+        font-size:12px;
+        font-weight:750;
+        text-align:left;
+      }
+      .editor-menus .menu-trigger::after {
+        content:"⌄";
+        color:#88909e;
+        font-size:16px;
+        transform:translateY(-1px);
+        transition:transform .16s ease;
+      }
+      .editor-menus .app-menu.open .menu-trigger { color:#245dc9; background:#eef3ff; }
+      .editor-menus .app-menu.open .menu-trigger::after { transform:rotate(180deg); }
+      .editor-menus .menu-popover {
+        position:static;
+        display:none;
+        width:100%;
+        min-width:0;
+        margin-top:4px;
+        padding:4px;
+        border:1px solid rgba(36,42,38,.07);
+        border-radius:10px;
+        background:#fff;
+        box-shadow:none;
+        backdrop-filter:none;
+      }
+      .editor-menus .app-menu.open .menu-popover { display:grid; }
+      .editor-menus .menu-command {
+        min-height:42px;
+        grid-template-columns:18px minmax(0,1fr) auto;
+        gap:9px;
+        padding:0 10px;
+        border-radius:8px;
+        font-size:11px;
+      }
+      .editor-menus .menu-command > svg { width:16px; height:16px; }
+      .editor-menus .menu-command kbd { font-size:8px; }
+      .editor-menus .menu-separator { margin:3px 6px; }
+      .board-tabs, .color-history, .status-footer, .zoom-indicator { display:none !important; }
+      .color-bar {
+        display:none;
+        top:auto;
+        right:10px;
+        bottom:112px;
+        left:10px;
+        max-height:116px;
+        flex-direction:row;
+        align-content:flex-start;
+        flex-wrap:wrap;
+        justify-content:flex-start;
+        overflow-y:auto;
+        padding:9px;
+        border-radius:13px;
+        box-shadow:0 10px 32px rgba(36,42,38,.13);
+      }
+      body.mobile-palette-open .color-bar { display:flex; }
+      .color-swatch { width:28px !important; height:28px !important; min-height:28px; flex:0 0 28px; border-radius:7px; }
+      .tool-rail {
+        z-index:75;
+        top:auto;
+        right:10px;
+        bottom:calc(8px + env(safe-area-inset-bottom));
+        left:10px;
+        display:flex;
+        justify-content:center;
+        gap:3px;
+        width:auto;
+        padding:5px;
+        transform:none;
+        border-radius:14px;
+        background:rgba(255,255,255,.90);
+        box-shadow:0 7px 24px rgba(36,42,38,.11);
+      }
+      .tool-button { width:42px; height:42px; border-radius:9px; }
+      .tool-button svg { width:18px; height:18px; }
+      .mobile-controls {
+        z-index:76;
+        right:10px;
+        bottom:calc(64px + env(safe-area-inset-bottom));
+        left:auto;
+        display:flex;
+        gap:2px;
+        padding:4px;
+        border:1px solid rgba(36,42,38,.08);
+        border-radius:12px;
+        background:rgba(255,255,255,.88);
+        box-shadow:0 5px 18px rgba(36,42,38,.09);
+        backdrop-filter:blur(14px);
+      }
+      .mobile-controls button {
+        display:grid;
+        width:34px;
+        height:34px;
+        place-items:center;
+        border:0;
+        border-radius:8px;
+        color:#536070;
+        background:transparent;
+        cursor:pointer;
+      }
+      .mobile-controls button:active, .mobile-controls button:hover { color:#245dc9; background:#eef3ff; }
+      .mobile-controls button svg { width:16px; height:16px; stroke-width:1.8; }
+      body.mobile-palette-open .mobile-controls #mobilePaletteButton { color:#245dc9; background:#eaf1ff; }
+      body.home-mode #mobileMenuButton { display:grid; }
+      .home-mode .editor-menus { display:none !important; }
+      #boardOverviewModal.board-page { inset:52px 0 0; padding:24px 14px 14px; }
+      .board-page .board-grid { grid-template-columns:1fr 1fr !important; gap:10px; }
+      .board-card { padding:13px; }
+      .board-card strong { font-size:11px; margin-right:24px; }
+      .media-card { max-width:78vw; max-height:50vh; }
+    }
+
     @media (prefers-reduced-motion: reduce) {
       *, *::before, *::after { scroll-behavior: auto !important; transition-duration: .01ms !important; animation-duration: .01ms !important; }
     }
@@ -736,6 +928,16 @@
     .document-viewer { width:min(760px,92vw); }
     .document-content { max-height:65vh;overflow:auto;margin:0;padding:16px;border:1px solid #e2e8f0;border-radius:6px;background:#f8fafc;color:#1e293b;white-space:pre-wrap;font:12px/1.6 ui-monospace,SFMono-Regular,Consolas,monospace; }
     @media(max-width:720px) { .board-tabs{top:48px;} .color-history{display:none;} .board-page .board-grid{grid-template-columns:1fr;} .editor-menus .app-menu:nth-child(n+3){display:none;} .color-bar{bottom:58px;} .mobile-controls{bottom:104px;} .tool-rail{bottom:8px;} .media-card{max-width:72vw;max-height:52vh;} }
+    @media (max-width:720px) {
+      /* Final mobile overrides: never hide feature menus; keep transient controls away from the workspace. */
+      .header-panel .editor-menus .app-menu { display:block !important; }
+      .header-panel .editor-menus { display:none; }
+      .header-panel.mobile-nav-open .editor-menus { display:flex !important; }
+      .color-bar { bottom:calc(112px + env(safe-area-inset-bottom)) !important; }
+      .mobile-controls { bottom:calc(64px + env(safe-area-inset-bottom)) !important; }
+      .tool-rail { bottom:calc(8px + env(safe-area-inset-bottom)) !important; }
+      .board-tabs, .color-history, .status-footer, .zoom-indicator { display:none !important; }
+    }
   </style>
 </head>
 <body>
@@ -756,13 +958,15 @@
   </nav>
 
   <header class="header-panel" aria-label="Navigasi file dan board">
+    <button id="mobileMenuButton" class="mobile-nav-toggle" type="button" aria-label="Buka menu utama" aria-expanded="false" aria-controls="mobileMenuPanel"></button>
     <div class="header-brand" aria-hidden="true"><div class="brand-mark">W</div><span>Whiteboard</span></div>
-    <nav class="editor-menus" aria-label="Menu editor">
+    <nav id="mobileMenuPanel" class="editor-menus" aria-label="Menu editor">
       <div class="app-menu"><button class="menu-trigger" type="button" aria-haspopup="menu">File</button><div class="menu-popover" role="menu"><button id="newBoard" class="menu-command" type="button">New board <kbd>Ctrl+N</kbd></button><button id="openBoardsMenu" class="menu-command" type="button">Open all boards <kbd>Ctrl+O</kbd></button><button id="openDeviceMenu" class="menu-command" type="button">Import board <kbd>Ctrl+Shift+O</kbd></button><button id="saveBoard" class="menu-command" type="button">Save board <kbd>Ctrl+S</kbd></button><button id="exportBoard" class="menu-command" type="button">Export board <kbd>Ctrl+E</kbd></button><button id="importBoard" class="menu-command" type="button">Import board <kbd>Ctrl+I</kbd></button><button id="closeBoardMenu" class="menu-command" type="button">Close board <kbd>Shift+W</kbd></button><button id="renameBoardMenu" class="menu-command" type="button">Rename board</button><button id="importMedia" class="menu-command" type="button">Import media</button></div></div>
-      <div class="app-menu"><button class="menu-trigger" type="button" aria-haspopup="menu">Edit</button><div class="menu-popover" role="menu"><button id="undoMenu" class="menu-command" type="button">Undo <kbd>Ctrl+Z</kbd></button><button id="redoMenu" class="menu-command" type="button">Redo <kbd>Ctrl+Y</kbd></button><button id="duplicateMenu" class="menu-command" type="button">Duplicate <kbd>Ctrl+D</kbd></button><button id="groupMenu" class="menu-command" type="button">Group <kbd>Ctrl+G</kbd></button><button id="ungroupMenu" class="menu-command" type="button">Ungroup <kbd>Ctrl+U</kbd></button><div class="menu-separator"></div><button id="cutMenu" class="menu-command" type="button">Cut <kbd>Ctrl+X</kbd></button><button id="copyMenu" class="menu-command" type="button">Copy <kbd>Ctrl+C</kbd></button><button id="pasteMenu" class="menu-command" type="button">Paste <kbd>Ctrl+V</kbd></button><button id="deleteMenu" class="menu-command" type="button">Delete <kbd>Delete</kbd></button><button id="selectAllMenu" class="menu-command" type="button">Select All <kbd>Ctrl+A</kbd></button></div></div>
+      <div class="app-menu"><button class="menu-trigger" type="button" aria-haspopup="menu">Edit</button><div class="menu-popover" role="menu"><button id="undoMenu" class="menu-command" type="button">Undo <kbd>Ctrl+Z</kbd></button><button id="redoMenu" class="menu-command" type="button">Redo <kbd>Ctrl+Y</kbd></button><button id="repeatMenu" class="menu-command" type="button">Repeat <kbd>Ctrl+R</kbd></button><button id="duplicateMenu" class="menu-command" type="button">Duplicate <kbd>Ctrl+D</kbd></button><button id="groupMenu" class="menu-command" type="button">Group <kbd>Ctrl+G</kbd></button><button id="ungroupMenu" class="menu-command" type="button">Ungroup <kbd>Ctrl+U</kbd></button><div class="menu-separator"></div><button id="cutMenu" class="menu-command" type="button">Cut <kbd>Ctrl+X</kbd></button><button id="copyMenu" class="menu-command" type="button">Copy <kbd>Ctrl+C</kbd></button><button id="pasteMenu" class="menu-command" type="button">Paste <kbd>Ctrl+V</kbd></button><button id="deleteMenu" class="menu-command" type="button">Delete <kbd>Delete</kbd></button><button id="selectAllMenu" class="menu-command" type="button">Select All <kbd>Ctrl+A</kbd></button></div></div>
       <div class="app-menu"><button class="menu-trigger" type="button" aria-haspopup="menu">View</button><div class="menu-popover" role="menu"><button id="fitMenu" class="menu-command" type="button">Show All <kbd>Ctrl+Shift+A</kbd></button><button id="zoomInMenu" class="menu-command" type="button">Zoom in <kbd>Ctrl++</kbd></button><button id="zoomOutMenu" class="menu-command" type="button">Zoom out <kbd>Ctrl+−</kbd></button></div></div>
       <div class="app-menu"><button class="menu-trigger" type="button" aria-haspopup="menu">Setting</button><div class="menu-popover" role="menu"><button id="animationMenu" class="menu-command" type="button"><span>Animation</span><kbd>Aktif</kbd></button><button id="snapToggleMenu" class="menu-command" type="button"><span><span class="menu-check">✓</span> Snap Precision</span><kbd>Aktif</kbd></button><button id="settingsButton" class="menu-command" type="button">Shortcut Guide <kbd>Modal</kbd></button></div></div>
       <div class="app-menu"><button class="menu-trigger" type="button" aria-haspopup="menu">Tool</button><div class="menu-popover" role="menu"><button id="toggleToolbarMenu" class="menu-command" type="button">Toolbar <kbd>Aktif</kbd></button><button id="togglePaletteMenu" class="menu-command" type="button">Color Palette <kbd>Aktif</kbd></button><button id="toggleHistoryMenu" class="menu-command" type="button">Color History <kbd>Aktif</kbd></button><button id="toggleBoardStripMenu" class="menu-command" type="button">Board Strip <kbd>Aktif</kbd></button></div></div>
+      <div class="app-menu"><button class="menu-trigger" type="button" aria-haspopup="menu">Arrange</button><div class="menu-popover" role="menu"><button id="bringFrontMenu" class="menu-command" type="button">Bawa ke depan <kbd>Ctrl+Shift+↑</kbd></button><button id="sendBackMenu" class="menu-command" type="button">Kirim ke belakang <kbd>Ctrl+Shift+↓</kbd></button><div class="menu-separator"></div><button id="alignLeftMenu" class="menu-command" type="button">Rata kiri <kbd>L</kbd></button><button id="alignRightMenu" class="menu-command" type="button">Rata kanan <kbd>R</kbd></button><button id="alignTopMenu" class="menu-command" type="button">Rata atas <kbd>T</kbd></button><button id="alignBottomMenu" class="menu-command" type="button">Rata bawah <kbd>B</kbd></button><button id="alignCenterXMenu" class="menu-command" type="button">Tengah horizontal <kbd>C</kbd></button><button id="alignCenterYMenu" class="menu-command" type="button">Tengah vertikal <kbd>E</kbd></button></div></div>
     </nav>
     <nav class="quick-actions" aria-label="Aksi cepat">
       <div class="quick-group" aria-label="Riwayat"><button id="quickUndo" class="quick-action" type="button" aria-label="Urungkan" title="Urungkan · Ctrl+Z"></button><button id="quickRedo" class="quick-action" type="button" aria-label="Ulangi" title="Ulangi · Ctrl+Shift+Z"></button></div>
@@ -779,7 +983,14 @@
 
   <nav id="boardTabs" class="board-tabs" aria-label="Board terbuka"></nav><div id="colorHistory" class="color-history" aria-label="Riwayat warna"></div>
   <div id="zoomIndicator" class="zoom-indicator" aria-live="polite">100%</div>
-  <div id="mobileControls" class="mobile-controls" aria-label="Kontrol zoom mobile"><button id="mobileZoomOut" type="button" aria-label="Perkecil">−</button><button id="mobileFit" type="button" aria-label="Tampilkan seluruh kartu">⌗</button><button id="mobileZoomIn" type="button" aria-label="Perbesar">+</button></div>
+  <div id="mobileControls" class="mobile-controls" aria-label="Kontrol kanvas mobile">
+    <button id="mobileBoardButton" type="button" aria-label="Buka board" title="Board"></button>
+    <button id="mobilePaletteButton" type="button" aria-label="Buka palet warna" title="Warna"></button>
+    <button id="mobileContextButton" type="button" aria-label="Aksi kartu" title="Aksi kartu"></button>
+    <button id="mobileZoomOut" type="button" aria-label="Perkecil" title="Perkecil"></button>
+    <button id="mobileFit" type="button" aria-label="Tampilkan seluruh kartu" title="Tampilkan seluruh kartu"></button>
+    <button id="mobileZoomIn" type="button" aria-label="Perbesar" title="Perbesar"></button>
+  </div>
   <div id="selectionBox" class="selection-box" aria-hidden="true"></div>
   <div id="multiSelectionFrame" class="multi-selection-frame" aria-hidden="true"></div>
   <div id="saveToast" class="save-toast" role="status" aria-live="polite">Board tersimpan</div>
@@ -849,7 +1060,7 @@
     </div>
     <details class="release" open>
       <summary class="release-meta"><strong>v1.0.0-beta — stabilisasi alur inti</strong></summary>
-      <div class="change-list"><article class="change-group"><h3>Alur board</h3><ul><li>Shift+W menutup board aktif, meminta penyimpanan secara default, lalu membuka board berikutnya.</li><li>Shift+R membuka Recent Board. Tab board memperoleh tombol tutup terpisah.</li><li>Duplikasi board langsung disimpan dan ditempatkan di urutan recent teratas.</li></ul></article><article class="change-group"><h3>Interaksi</h3><ul><li>Duplicate kartu memakai offset kanan bawah tetap; Paste tetap mengikuti pointer.</li><li>Dropdown pengaturan tidak menutup setelah sakelar ditekan, ikon Copy dan Duplicate dibedakan, serta Repeat ditambahkan ke header.</li><li>Scroll bar Recent disembunyikan dan tombol aksi dikunci di bagian bawah.</li></ul></article></div>
+      <div class="change-list"><article class="change-group"><h3>Alur board</h3><ul><li>Shift+W menutup board aktif, meminta penyimpanan secara default, lalu membuka board berikutnya.</li><li>Shift+R membuka Recent Board. Tab board memperoleh tombol tutup terpisah.</li><li>Duplikasi board langsung disimpan dan ditempatkan di urutan recent teratas.</li></ul></article><article class="change-group"><h3>Interaksi</h3><ul><li>Duplicate kartu memakai offset kanan bawah tetap; Paste tetap mengikuti pointer.</li><li>Dropdown pengaturan tidak menutup setelah sakelar ditekan, ikon Copy dan Duplicate dibedakan, serta Repeat ditambahkan ke header.</li><li>Scroll bar Recent disembunyikan dan tombol aksi dikunci di bagian bawah.</li><li>Tampilan mobile memakai navigasi ikon/menu, kontrol kanvas ringkas, dan akses penuh ke command editor.</li></ul></article></div>
     </details>
     <details class="release">
       <summary class="release-meta"><strong>v0.9.3 — menu &amp; penutupan board</strong></summary>
@@ -1102,6 +1313,7 @@
       const activeBoardTitle = document.getElementById('activeBoardTitle');
       const openBoardsMenu = document.getElementById('openBoardsMenu');
       const renameBoardMenu = document.getElementById('renameBoardMenu');
+      const repeatMenu = document.getElementById('repeatMenu');
       const snapToggleMenu = document.getElementById('snapToggleMenu');
       const importBoardFromOverview = document.getElementById('importBoardFromOverview');
       const dragMotionToggle = document.getElementById('dragMotionToggle');
@@ -1109,6 +1321,11 @@
       const mobileZoomOut = document.getElementById('mobileZoomOut');
       const mobileZoomIn = document.getElementById('mobileZoomIn');
       const mobileFit = document.getElementById('mobileFit');
+      const mobileMenuButton = document.getElementById('mobileMenuButton');
+      const mobileBoardButton = document.getElementById('mobileBoardButton');
+      const mobilePaletteButton = document.getElementById('mobilePaletteButton');
+      const mobileContextButton = document.getElementById('mobileContextButton');
+      const headerPanel = document.querySelector('.header-panel');
       const documentModal = document.getElementById('documentModal');
       const documentTitle = document.getElementById('documentTitle');
       const documentContent = document.getElementById('documentContent');
@@ -1174,6 +1391,20 @@
 
       function closeHeaderMenus() {
         document.querySelectorAll('.app-menu.open').forEach(menu => menu.classList.remove('open'));
+      }
+
+      function closeMobileNav() {
+        headerPanel?.classList.remove('mobile-nav-open');
+        mobileMenuButton?.setAttribute('aria-expanded', 'false');
+      }
+
+      function toggleMobilePalette() {
+        document.body.classList.toggle('mobile-palette-open');
+      }
+
+      function openMobileContextMenu() {
+        const selectedCard = selectedIds.size === 1 ? cardElement([...selectedIds][0]) : null;
+        showContextMenu(selectedCard || viewport, window.innerWidth / 2, Math.max(72, window.innerHeight / 2));
       }
 
       function updateSnapControl() {
@@ -1246,7 +1477,7 @@
       }
 
       function installMenuIcons() {
-        const icons = { openBoardsMenu:'folder', newBoard:'plus', renameBoardMenu:'pencil', saveBoard:'save', importMedia:'image', exportBoard:'download', importBoard:'upload', openDeviceMenu:'folder', closeBoardMenu:'x', undoMenu:'undo', redoMenu:'redo', duplicateMenu:'duplicate', groupMenu:'group', ungroupMenu:'ungroup', cutMenu:'scissors', copyMenu:'copy', pasteMenu:'clipboard', deleteMenu:'trash', selectAllMenu:'selectAll', fitMenu:'scan', zoomInMenu:'zoomIn', zoomOutMenu:'zoomOut', animationMenu:'settings', snapToggleMenu:'magnet', settingsButton:'keyboard', toggleToolbarMenu:'pointer', togglePaletteMenu:'eyedropper', toggleHistoryMenu:'clipboard', toggleBoardStripMenu:'folder' };
+        const icons = { openBoardsMenu:'folder', newBoard:'plus', renameBoardMenu:'pencil', saveBoard:'save', importMedia:'image', exportBoard:'download', importBoard:'upload', openDeviceMenu:'folder', closeBoardMenu:'x', undoMenu:'undo', redoMenu:'redo', repeatMenu:'repeat', duplicateMenu:'duplicate', groupMenu:'group', ungroupMenu:'ungroup', cutMenu:'scissors', copyMenu:'copy', pasteMenu:'clipboard', deleteMenu:'trash', selectAllMenu:'selectAll', fitMenu:'scan', zoomInMenu:'zoomIn', zoomOutMenu:'zoomOut', animationMenu:'settings', snapToggleMenu:'magnet', settingsButton:'keyboard', toggleToolbarMenu:'pointer', togglePaletteMenu:'eyedropper', toggleHistoryMenu:'clipboard', toggleBoardStripMenu:'folder', bringFrontMenu:'front', sendBackMenu:'back', alignLeftMenu:'alignLeft', alignRightMenu:'alignLeft', alignTopMenu:'alignTop', alignBottomMenu:'alignTop', alignCenterXMenu:'selectAll', alignCenterYMenu:'selectAll' };
         Object.entries(icons).forEach(([id, name]) => document.getElementById(id)?.prepend(lucideIcon(name)));
         addCardTool.replaceChildren(lucideIcon('plus'));
         cursorTool.replaceChildren(lucideIcon('pointer'));
@@ -1257,6 +1488,13 @@
         document.querySelector('.drop-icon')?.replaceChildren(lucideIcon('upload'));
         const quickIcons={quickUndo:'undo',quickRedo:'redo',quickCut:'scissors',quickCopy:'copy',quickPaste:'clipboard',quickDuplicate:'duplicate',quickRepeat:'repeat',quickDelete:'trash',quickGroup:'group',quickUngroup:'ungroup',quickSelectAll:'selectAll',quickZoomIn:'zoomIn',quickZoomOut:'zoomOut',quickFit:'scan'};
         Object.entries(quickIcons).forEach(([id,name])=>document.getElementById(id)?.replaceChildren(lucideIcon(name)));
+        mobileMenuButton?.replaceChildren(lucideIcon('more'));
+        mobileBoardButton?.replaceChildren(lucideIcon('folder'));
+        mobilePaletteButton?.replaceChildren(lucideIcon('eyedropper'));
+        mobileContextButton?.replaceChildren(lucideIcon('more'));
+        mobileZoomOut?.replaceChildren(lucideIcon('zoomOut'));
+        mobileFit?.replaceChildren(lucideIcon('scan'));
+        mobileZoomIn?.replaceChildren(lucideIcon('zoomIn'));
       }
 
       function applyCardStyle(el, card) {
@@ -3073,6 +3311,8 @@
       }
 
       function openBoardOverview() {
+        closeMobileNav();
+        closeHeaderMenus();
         renderBoardOverview();
         document.body.classList.add('home-mode');
         activeBoardTitle.textContent = 'Recent board';
@@ -3387,6 +3627,16 @@ if (shortcutsEnabled && event.shiftKey && !command && !event.altKey && key === '
       mobileZoomOut.addEventListener('click', () => zoomAt(window.innerWidth / 2, window.innerHeight / 2, .8));
       mobileZoomIn.addEventListener('click', () => zoomAt(window.innerWidth / 2, window.innerHeight / 2, 1.25));
       mobileFit.addEventListener('click', fitAllCards);
+      mobileBoardButton.addEventListener('click', () => { closeMobileNav(); closeHeaderMenus(); openBoardOverview(); });
+      mobilePaletteButton.addEventListener('click', toggleMobilePalette);
+      mobileContextButton.addEventListener('click', openMobileContextMenu);
+      mobileMenuButton.addEventListener('click', event => {
+        event.stopPropagation();
+        const open = !headerPanel.classList.contains('mobile-nav-open');
+        closeHeaderMenus();
+        headerPanel.classList.toggle('mobile-nav-open', open);
+        mobileMenuButton.setAttribute('aria-expanded', String(open));
+      });
       boardSelect.addEventListener('change', () => switchBoard(boardSelect.value));
       boardName.addEventListener('change', renameCurrentBoard);
       boardName.addEventListener('keydown', event => {
@@ -3468,6 +3718,15 @@ if (shortcutsEnabled && event.shiftKey && !command && !event.altKey && key === '
       document.getElementById('quickZoomIn').addEventListener('click', () => zoomFromPointer('in'));
       document.getElementById('quickZoomOut').addEventListener('click', () => zoomFromPointer('out'));
       document.getElementById('quickFit').addEventListener('click', fitAllCards);
+      repeatMenu.addEventListener('click', repeatLastCardAction);
+      document.getElementById('bringFrontMenu').addEventListener('click', () => moveSelectedToLayer('top'));
+      document.getElementById('sendBackMenu').addEventListener('click', () => moveSelectedToLayer('bottom'));
+      document.getElementById('alignLeftMenu').addEventListener('click', () => alignSelected('left'));
+      document.getElementById('alignRightMenu').addEventListener('click', () => alignSelected('right'));
+      document.getElementById('alignTopMenu').addEventListener('click', () => alignSelected('top'));
+      document.getElementById('alignBottomMenu').addEventListener('click', () => alignSelected('bottom'));
+      document.getElementById('alignCenterXMenu').addEventListener('click', () => alignSelected('centerX'));
+      document.getElementById('alignCenterYMenu').addEventListener('click', () => alignSelected('centerY'));
       document.getElementById('animationMenu').addEventListener('click', () => { dragMotionEnabled=!dragMotionEnabled;localStorage.setItem(MOTION_STORAGE_KEY,String(dragMotionEnabled));updateMotionSetting(); });
       document.getElementById('toggleToolbarMenu').addEventListener('click', event => toggleSurface(toolRail,event.currentTarget));
       document.getElementById('togglePaletteMenu').addEventListener('click', event => toggleSurface(colorBar,event.currentTarget));
@@ -3488,6 +3747,13 @@ if (shortcutsEnabled && event.shiftKey && !command && !event.altKey && key === '
         const button = event.target.closest('[data-format]');
         if (button) applyTextFormat(button.dataset.format);
       });
+      document.addEventListener('keydown', event => {
+        if (event.key === 'Escape') {
+          closeHeaderMenus();
+          closeMobileNav();
+          document.body.classList.remove('mobile-palette-open');
+        }
+      });
       document.querySelectorAll('.menu-trigger').forEach(trigger => trigger.addEventListener('click', event => {
         event.stopPropagation();
         const menu = trigger.closest('.app-menu');
@@ -3496,7 +3762,7 @@ if (shortcutsEnabled && event.shiftKey && !command && !event.altKey && key === '
         if (shouldOpen) menu.classList.add('open');
       }));
       const persistentMenuCommands = new Set(['animationMenu','snapToggleMenu','toggleToolbarMenu','togglePaletteMenu','toggleHistoryMenu','toggleBoardStripMenu']);
-      document.querySelectorAll('.menu-command').forEach(command => command.addEventListener('click', () => { if (!persistentMenuCommands.has(command.id)) closeHeaderMenus(); }));
+      document.querySelectorAll('.menu-command').forEach(command => command.addEventListener('click', () => { closeHeaderMenus(); closeMobileNav(); }));
       closeSettingsButton.addEventListener('click', closeSettings);
       settingsModal.addEventListener('pointerdown', event => { if (event.target === settingsModal) closeSettings(); });
       closeDocumentModalButton.addEventListener('click', () => { documentModal.classList.remove('open'); documentModal.setAttribute('aria-hidden','true'); updateScrim(); });
@@ -3519,6 +3785,8 @@ if (shortcutsEnabled && event.shiftKey && !command && !event.altKey && key === '
         if (!contextMenu.contains(event.target)) closeContextMenu();
         if (!boardCardMenu.contains(event.target) && !event.target.closest('.board-card-menu-button')) closeBoardCardMenu();
         if (!event.target.closest('.app-menu')) closeHeaderMenus();
+        if (!event.target.closest('#mobileMenuButton') && !event.target.closest('#mobileMenuPanel')) closeMobileNav();
+        if (!event.target.closest('#mobilePaletteButton') && !event.target.closest('#colorBar')) document.body.classList.remove('mobile-palette-open');
       });
       document.addEventListener('dragenter', event => {
         if (!event.dataTransfer?.types?.includes('Files')) return;
